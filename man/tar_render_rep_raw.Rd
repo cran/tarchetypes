@@ -156,21 +156,21 @@ in the target and \code{quiet = TRUE} in \code{rmarkdown::render()}.
 }
 \examples{
 if (identical(Sys.getenv("TAR_LONG_EXAMPLES"), "true")) {
-targets::tar_dir({
+targets::tar_dir({ # tar_dir() runs code from a temporary directory.
 # Parameterized R Markdown:
 lines <- c(
   "---",
-  "title: report",
+  "title: 'report.Rmd source file'",
   "output_format: html_document",
   "params:",
   "  par: \"default value\"",
   "---",
-  "",
+  "Assume these lines are in a file called report.Rmd.",
   "```{r}",
   "print(params$par)",
   "```"
 )
-writeLines(lines, "report.Rmd")
+# The following pipeline will run the report for each row of params.
 targets::tar_script({
   library(tarchetypes)
   list(
@@ -181,8 +181,7 @@ targets::tar_script({
     )
   )
 }, ask = FALSE)
-targets::tar_visnetwork() # nolint
-targets::tar_make() # Run the pipeline. # nolint
+# Then, run the targets pipeline as usual.
 })
 }
 }

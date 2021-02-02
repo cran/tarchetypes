@@ -20,24 +20,12 @@
 #'   e.g. `tar_target()`, target archetypes like [tar_render()], or similar.
 #' @examples
 #' if (identical(Sys.getenv("TAR_LONG_EXAMPLES"), "true")) {
-#' targets::tar_dir({
-#' lines <- c(
-#'   "---",
-#'   "title: report",
-#'   "output_format: html_document",
-#'   "---",
-#'   "",
-#'   "```{r}",
-#'   "targets::tar_read(data)",
-#'   "```"
-#' )
-#' writeLines(lines, "report.Rmd")
+#' targets::tar_dir({ # tar_dir() runs code from a temporary directory.
 #' targets::tar_script({
 #'   library(tarchetypes)
 #'   tar_plan(
-#'     data = data.frame(x = seq_len(26), y = sample.int(26)),
-#'     means = colMeans(data),
-#'     tar_render(report, "report.Rmd")
+#'     tarchetypes::tar_fst_tbl(data, data.frame(x = seq_len(26))),
+#'     means = colMeans(data) # No need for tar_target() for simple cases.
 #'   )
 #' })
 #' targets::tar_make()

@@ -1,4 +1,5 @@
 targets::tar_test("tar_knitr_deps()", {
+  skip_pandoc()
   lines1 <- c(
     "---",
     "title: report",

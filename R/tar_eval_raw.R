@@ -27,21 +27,21 @@
 #'   name = rlang::syms(c("name1", "name2")),
 #'   file = c("file1.Rmd", "file2.Rmd")
 #' )
+#' tar_sub_raw(quote(list(name, file)), values = values)
 #' tar_sub_raw(quote(tar_render(name, file)), values = values)
-#' targets::tar_dir({
-#' file.create(c("file1.Rmd", "file2.Rmd"))
-#' str(tar_eval_raw(quote(tar_render(name, file)), values = values))
+#' path <- tempfile()
+#' file.create(path)
+#' str(tar_eval_raw(quote(tar_render(name, path)), values = values))
 #' # So in your _targets.R file, you can define a pipeline like as below.
 #' # Just make sure to set a unique name for each target
 #' # (which tar_map() does automatically).
 #' values <- list(
 #'   name = rlang::syms(c("name1", "name2")),
-#'   file = c("file1.Rmd", "file2.Rmd")
+#'   file = c(path, path)
 #' )
 #' list(
 #'   tar_eval_raw(quote(tar_render(name, file)), values = values)
 #' )
-#' })
 tar_eval_raw <- function(expr, values, envir = parent.frame()) {
   assert_lang(expr)
   assert_values_list(values)
