@@ -1,3 +1,9 @@
+# tarchetypes 0.1.0
+
+* Add new functions for easier grouping of data frames for dynamic branching: `tar_group_by()`, `tar_group_select()`, `tar_group_size()`, `tar_group_count()` (#32, @liutiming).
+* In `tar_render()` and related functions, track the `*_files/` output directory if it exists (#30).
+* Implement an external `walk_ast()` function to make it easier for other developers to extend the static code analysis of `tarchetypes` (@MilesMcBain).
+
 # tarchetypes 0.0.4
 
 * Skip literate programming tests if pandoc is missing or has an insufficient version.
