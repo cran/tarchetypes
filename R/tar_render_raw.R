@@ -101,6 +101,7 @@ tar_render_raw <- function(
   assert_scalar(path, "tar_render_raw() only takes one file at a time.")
   assert_chr(path, "path argument of tar_render_raw() must be a character.")
   assert_path(path, paste("path", path, "for tar_render_raw() does not exist"))
+  assert_not_dirs(path)
   assert_lang(render_arguments, "render_arguments must be a language object.")
   msg <- "render_arguments must not be an expression object."
   assert_not_expr(render_arguments, msg)
@@ -124,7 +125,7 @@ tar_render_command <- function(path, args, quiet) {
   args$input <- path
   args$knit_root_dir <- quote(getwd())
   args$quiet <- quiet
-  deps <- call_list(rlang::syms(knitr_deps(path)))
+  deps <- call_list(as_symbols(knitr_deps(path)))
   fun <- call_ns("tarchetypes", "tar_render_run")
   exprs <- list(fun, path = path, args = args, deps = deps)
   as.expression(as.call(exprs))
@@ -144,8 +145,9 @@ tar_render_command <- function(path, args, quiet) {
 #'   report, automatically created by `tar_render()`.
 tar_render_run <- function(path, args, deps) {
   assert_package("rmarkdown")
+  withr::local_options(list(crayon.enabled = NULL))
   envir <- parent.frame()
-  args$envir <- args$envir %||% targets::tar_envir(default = envir)
+  args$envir <- args$envir %|||% targets::tar_envir(default = envir)
   force(args$envir)
   output <- do.call(rmarkdown::render, args)
   tar_render_paths(output, path)

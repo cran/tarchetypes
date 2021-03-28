@@ -58,8 +58,8 @@ tar_change <- function(
   name <- deparse_language(substitute(name))
   name_change <- paste0(name, "_change")
   envir <- tar_option_get("envir")
-  command <- tidy_eval(substitute(command), envir, tidy_eval)
-  change <- tidy_eval(substitute(change), envir, tidy_eval)
+  command <- tar_tidy_eval(substitute(command), envir, tidy_eval)
+  change <- tar_tidy_eval(substitute(change), envir, tidy_eval)
   tar_change_raw(
     name = name,
     name_change = name_change,
@@ -120,7 +120,7 @@ tar_change_raw <- function(
   )
   downstream <- tar_target_raw(
     name = name,
-    command = call_brace(list(rlang::sym(name_change), command)),
+    command = call_brace(list(as.symbol(name_change), command)),
     pattern = NULL,
     packages = packages,
     library = library,

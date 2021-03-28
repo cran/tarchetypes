@@ -1,3 +1,8 @@
+# tarchetypes 0.1.1
+
+* Unset `crayon.enabled` for literate programming.
+* Switch meaning of `%||%` and `%|||%` to conform to historical precedent.
+
 # tarchetypes 0.1.0
 
 * Add new functions for easier grouping of data frames for dynamic branching: `tar_group_by()`, `tar_group_select()`, `tar_group_size()`, `tar_group_count()` (#32, @liutiming).

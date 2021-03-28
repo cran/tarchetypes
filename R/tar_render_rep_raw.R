@@ -118,13 +118,14 @@ tar_render_rep_raw <- function(
   assert_scalar(path, "tar_render_raw() only takes one file at a time.")
   assert_chr(path, "path argument of tar_render_raw() must be a character.")
   assert_path(path, paste("path", path, "for tar_render_raw() does not exist"))
+  assert_not_dirs(path)
   assert_lang(params)
-  assert_dbl(batches %||% 0L, "batches must be numeric.")
-  assert_scalar(batches %||% 0L, "batches must have length 1.")
+  assert_dbl(batches %|||% 0L, "batches must be numeric.")
+  assert_scalar(batches %|||% 0L, "batches must have length 1.")
   assert_list(args, "args must be a named list.")
-  assert_nonempty(names(args %|||% list(x = 1)), "args must be a named list.")
+  assert_nonempty(names(args %||% list(x = 1)), "args must be a named list.")
   name_params <- paste0(name, "_params")
-  sym_params <- rlang::sym(name_params)
+  sym_params <- as.symbol(name_params)
   target_params <- tar_target_raw(
     name = name_params,
     command = tar_render_rep_params_command(params, batches),
@@ -174,7 +175,7 @@ tar_render_rep_params_command <- function(params, batches) {
 #' @param params Data frame of R Markdown parameters.
 #' @param batches Number of batches to split up the renderings.
 tar_render_rep_run_params <- function(params, batches) {
-  batches <- batches %||% nrow(params)
+  batches <- batches %|||% nrow(params)
   params$tar_group <- as.integer(cut(seq_len(nrow(params)), breaks = batches))
   params
 }
@@ -183,8 +184,8 @@ tar_render_rep_command <- function(name, path, quiet, args) {
   args$input <- path
   args$knit_root_dir <- quote(getwd())
   args$quiet <- quiet
-  params <- rlang::sym(paste0(name, "_params"))
-  deps <- call_list(rlang::syms(knitr_deps(path)))
+  params <- as.symbol(paste0(name, "_params"))
+  deps <- call_list(as_symbols(knitr_deps(path)))
   fun <- call_ns("tarchetypes", "tar_render_rep_run")
   exprs <- list(fun, path = path, params = params, args = args, deps = deps)
   as.expression(as.call(exprs))
@@ -207,14 +208,15 @@ tar_render_rep_run <- function(path, params, args, deps) {
   assert_package("rmarkdown")
   envir <- parent.frame()
   params <- split(params, f = seq_len(nrow(params)))
-  args$envir <- args$envir %||% targets::tar_envir(default = envir)
+  args$envir <- args$envir %|||% targets::tar_envir(default = envir)
   force(args$envir)
   unname(unlist(map(params, ~tar_render_rep_rep(path, .x, args))))
 }
 
 tar_render_rep_rep <- function(path, params, args) {
+  withr::local_options(list(crayon.enabled = NULL))
   default_path <- tar_render_rep_default_path(path, params)
-  args$output_file <- params[["output_file"]] %||% default_path
+  args$output_file <- params[["output_file"]] %|||% default_path
   args$params <- params
   args$params[["output_file"]] <- NULL
   args$params[["tar_group"]] <- NULL
