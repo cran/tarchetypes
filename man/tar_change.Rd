@@ -115,7 +115,10 @@ to arrive over a network file system.)
 except the return value of the target is a URL that already exists
 and serves as input data for downstream targets. Optionally
 supply a custom \code{curl} handle through the \code{resources} argument, e.g.
-\code{tar_target(..., resources = list(handle = curl::new_handle()))}.
+\code{tar_target(..., resources = list(handle = curl::new_handle(nobody = TRUE)))}. # nolint
+in \code{new_handle()}, \code{nobody = TRUE} is important because it
+ensures \code{targets} just downloads the metadata instead of
+the entire data file when it checks time stamps and hashes.
 The data file at the URL needs to have an ETag or a Last-Modified
 time stamp, or else the target will throw an error because
 it cannot track the data. Also, use extreme caution when
@@ -162,7 +165,11 @@ create the special \code{tar_group} column with \code{dplyr::group_by()}.
 \item{error}{Character of length 1, what to do if the target
 runs into an error. If \code{"stop"}, the whole pipeline stops
 and throws an error. If \code{"continue"}, the error is recorded,
-but the pipeline keeps going.}
+but the pipeline keeps going. \code{error = "workspace"} is just like
+\code{error = "stop"} except \code{targets} saves a special workspace file
+to support interactive debugging outside the pipeline.
+(Visit \url{https://books.ropensci.org/targets/debugging.html}
+to learn how to debug targets using saved workspaces.)}
 
 \item{memory}{Character of length 1, memory strategy.
 If \code{"persistent"}, the target stays in memory
@@ -242,12 +249,8 @@ Only applies to the downstream target. The upstream target always runs.}
 \value{
 A list of two target objects, one upstream and one downstream.
 The upstream one triggers the change, and the downstream one
-responds to it. See the examples for details.
-Target objects represent skippable steps of the analysis pipeline
-as described at \url{https://books.ropensci.org/targets/}.
-Please see the design specification at
-\url{https://books.ropensci.org/targets-design/}
-to learn about the structure and composition of target objects.
+responds to it.
+See the "Target objects" section for background.
 }
 \description{
 Create a target that responds to a change
@@ -260,7 +263,32 @@ an auxiliary value. This auxiliary value gets referenced in the
 downstream target, which causes the downstream target to rerun
 if the auxiliary value changes. The behavior is cancelled if
 \code{cue} is \code{tar_cue(depend = FALSE)} or \code{tar_cue(mode = "never")}.
+
+Because the upstream target always runs,
+\code{tar_outdated()} and \code{tar_visnetwork()} will always
+show both targets as outdated. However, \code{tar_make()} will still
+skip the downstream one if the upstream target
+did not detect a change.
 }
+\section{Target objects}{
+
+Most \code{tarchetypes} functions are target factories,
+which means they return target objects
+or lists of target objects.
+Target objects represent skippable steps of the analysis pipeline
+as described at \url{https://books.ropensci.org/targets/}.
+Please read the walkthrough at
+\url{https://books.ropensci.org/targets/walkthrough.html}
+to understand the role of target objects in analysis pipelines.
+
+For developers,
+\url{https://wlandau.github.io/targetopia/contributing.html#target-factories}
+explains target factories (functions like this one which generate targets)
+and the design specification at
+\url{https://books.ropensci.org/targets-design/}
+details the structure and composition of target objects.
+}
+
 \examples{
 if (identical(Sys.getenv("TAR_LONG_EXAMPLES"), "true")) {
 targets::tar_dir({ # tar_dir() runs code from a temporary directory.
@@ -274,3 +302,10 @@ targets::tar_make()
 })
 }
 }
+\seealso{
+Other targets with custom invalidation rules: 
+\code{\link{tar_download}()},
+\code{\link{tar_force}()},
+\code{\link{tar_skip}()}
+}
+\concept{targets with custom invalidation rules}

@@ -1,5 +1,6 @@
 #' @title Group the rows of a data frame into a given number groups
 #' @export
+#' @family Grouped data frame targets
 #' @description Create a target that outputs a grouped data frame
 #'   for downstream dynamic branching. Set the maximum
 #'   number of groups using `count`. The number of rows per group
@@ -7,11 +8,8 @@
 #' @return A target object to generate a grouped data frame
 #'   to allows downstream dynamic targets to branch over the
 #'   groups of rows.
-#'   Target objects represent skippable steps of the analysis pipeline
-#'   as described at <https://books.ropensci.org/targets/>.
-#'   Please see the design specification at
-#'   <https://books.ropensci.org/targets-design/>
-#'   to learn about the structure and composition of target objects.
+#'   See the "Target objects" section for background.
+#' @inheritSection tar_map Target objects
 #' @inheritParams targets::tar_target
 #' @param count Positive integer, maximum number of row groups
 #' @examples
@@ -97,7 +95,7 @@ tar_group_count_command <- function(command, count, tidy_eval) {
 tar_group_count_run <- function(data, count) {
   assert_df(data, "tar_group_count() output must be a data frame.")
   count <- min(count, nrow(data))
-  data$tar_group <- trn(
+  data$tar_group <- if_any(
     count > 1L,
     as.integer(cut(seq_len(nrow(data)), breaks = count)),
     rep(1L, nrow(data))

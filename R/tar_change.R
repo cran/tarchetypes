@@ -1,4 +1,6 @@
 #' @title Target that responds to an arbitrary change.
+#' @export
+#' @family targets with custom invalidation rules
 #' @description Create a target that responds to a change
 #'   in an arbitrary value. If the value changes, the target reruns.
 #' @details `tar_change()` creates a pair of targets, one upstream
@@ -7,16 +9,18 @@
 #'   downstream target, which causes the downstream target to rerun
 #'   if the auxiliary value changes. The behavior is cancelled if
 #'   `cue` is `tar_cue(depend = FALSE)` or `tar_cue(mode = "never")`.
-#' @export
-#' @inheritParams targets::tar_target
+#'
+#'   Because the upstream target always runs,
+#'   `tar_outdated()` and `tar_visnetwork()` will always
+#'   show both targets as outdated. However, `tar_make()` will still
+#'   skip the downstream one if the upstream target
+#'   did not detect a change.
 #' @return A list of two target objects, one upstream and one downstream.
 #'   The upstream one triggers the change, and the downstream one
-#'   responds to it. See the examples for details.
-#'   Target objects represent skippable steps of the analysis pipeline
-#'   as described at <https://books.ropensci.org/targets/>.
-#'   Please see the design specification at
-#'   <https://books.ropensci.org/targets-design/>
-#'   to learn about the structure and composition of target objects.
+#'   responds to it.
+#'   See the "Target objects" section for background.
+#' @inheritSection tar_map Target objects
+#' @inheritParams targets::tar_target
 #' @param change R code for the upstream change-inducing target.
 #' @param tidy_eval Whether to invoke tidy evaluation
 #'   (e.g. the `!!` operator from `rlang`) as soon as the target is defined
@@ -100,7 +104,7 @@ tar_change_raw <- function(
   retrieval,
   cue
 ) {
-  upstream <- tar_target_raw(
+  upstream <- targets::tar_target_raw(
     name = name_change,
     command = change,
     pattern = NULL,
@@ -118,7 +122,7 @@ tar_change_raw <- function(
     retrieval = retrieval,
     cue = targets::tar_cue(mode = "always")
   )
-  downstream <- tar_target_raw(
+  downstream <- targets::tar_target_raw(
     name = name,
     command = call_brace(list(as.symbol(name_change), command)),
     pattern = NULL,

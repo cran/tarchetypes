@@ -1,3 +1,15 @@
+# tarchetypes 0.2.0
+
+* Allow trailing commas in `tar_plan()` (#40, @kendonB).
+* Implement `tar_age()` based on `tar_cue_age()` (#39, @petrbouchal).
+* Implement new cue factories `tar_cue_age()`, `tar_cue_age_raw()`, `tar_cue_force()`, and `tar_cue_skip()` (#39).
+* Implement `tar_download()` (#38, @noamross, @petrbouchal)
+* Set intermediate temporary directory to remove race condition in `tar_render_rep()` (#36, @gorgitko). 
+* Prefix internal condition classes with "tar_".
+* Add new format helpers such as `tar_aws_rds()` and `tar_parquet()`.
+* Support hooks `tar_hook_before()`, `tar_hook_inner()`, and `tar_hook_outer()` (#44).
+* Deep-copy the cue in `tar_map()`.
+
 # tarchetypes 0.1.1
 
 * Unset `crayon.enabled` for literate programming.

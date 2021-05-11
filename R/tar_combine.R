@@ -1,14 +1,12 @@
 #' @title Static aggregation.
 #' @export
+#' @family branching
 #' @description Aggregate the results of upstream targets
 #'   into a new target.
 #' @return A new target object to combine the return values
 #'   from the upstream targets.
-#'   Target objects represent skippable steps of the analysis pipeline
-#'   as described at <https://books.ropensci.org/targets/>.
-#'   Please see the design specification at
-#'   <https://books.ropensci.org/targets-design/>
-#'   to learn about the structure and composition of target objects.
+#'   See the "Target objects" section for background.
+#' @inheritSection tar_map Target objects
 #' @inheritParams targets::tar_target
 #' @param name Symbol, name of the new target.
 #' @param ... One or more target objects or list of target objects.
@@ -113,7 +111,7 @@ tar_combine_impl <- function(
     envir = list(.x = names_sym),
     tidy_eval = TRUE
   )
-  tar_target_raw(
+  targets::tar_target_raw(
     name = name,
     command = command,
     pattern = pattern,

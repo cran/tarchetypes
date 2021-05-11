@@ -1,5 +1,6 @@
 #' @title Parameterized R Markdown with dynamic branching (raw version).
 #' @export
+#' @family Literate programming targets
 #' @description Targets to render a parameterized R Markdown report
 #'   with multiple sets of parameters (raw version). Same as
 #'   `tar_render_rep()` except `name` is a character string,
@@ -38,12 +39,8 @@
 #' @return A list of target objects to render the R Markdown
 #'   reports. Changes to the parameters, source file, dependencies, etc.
 #'   will cause the appropriate targets to rerun during `tar_make()`.
-#'
-#'   Target objects represent skippable steps of the analysis pipeline
-#'   as described at <https://books.ropensci.org/targets/>.
-#'   Please see the design specification at
-#'   <https://books.ropensci.org/targets-design/>
-#'   to learn about the structure and composition of target objects.
+#'   See the "Target objects" section for background.
+#' @inheritSection tar_map Target objects
 #' @inheritParams targets::tar_target
 #' @inheritParams rmarkdown::render
 #' @param path Character string, file path to the R Markdown source file.
@@ -126,7 +123,7 @@ tar_render_rep_raw <- function(
   assert_nonempty(names(args %||% list(x = 1)), "args must be a named list.")
   name_params <- paste0(name, "_params")
   sym_params <- as.symbol(name_params)
-  target_params <- tar_target_raw(
+  target_params <- targets::tar_target_raw(
     name = name_params,
     command = tar_render_rep_params_command(params, batches),
     packages = packages,
@@ -140,7 +137,7 @@ tar_render_rep_raw <- function(
     retrieval = retrieval,
     cue = cue
   )
-  target <- tar_target_raw(
+  target <- targets::tar_target_raw(
     name = name,
     command = tar_render_rep_command(name, path, quiet, args),
     pattern = substitute(map(x), env = list(x = sym_params)),
@@ -220,6 +217,7 @@ tar_render_rep_rep <- function(path, params, args) {
   args$params <- params
   args$params[["output_file"]] <- NULL
   args$params[["tar_group"]] <- NULL
+  args$intermediates_dir <- fs::dir_create(tempfile())
   output <- do.call(rmarkdown::render, args)
   tar_render_paths(output, path)
 }

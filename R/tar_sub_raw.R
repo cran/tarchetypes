@@ -1,16 +1,14 @@
 #' @title Create multiple expressions with symbol substitution (raw version).
 #' @export
+#' @family Metaprogramming utilities
 #' @description Loop over a grid of values and create an expression object
 #'   from each one. Helps with general metaprogramming. Unlike [tar_sub()],
 #'   which quotes the `expr` argument, `tar_sub_raw()` assumes `expr`
 #'   is an expression object.
 #' @return A list of expression objects. Often, these expression objects
 #'   evaluate to target objects (but not necessarily).
-#'   Target objects represent skippable steps of the analysis pipeline
-#'   as described at <https://books.ropensci.org/targets/>.
-#'   Please see the design specification at
-#'   <https://books.ropensci.org/targets-design/>
-#'   to learn about the structure and composition of target objects.
+#'   See the "Target objects" section for background.
+#' @inheritSection tar_map Target objects
 #' @param expr Expression object with the starting expression.
 #'   Values are iteratively substituted
 #'   in place of symbols in `expr` to create each new expression.
@@ -32,9 +30,13 @@ tar_sub_raw <- function(expr, values) {
 }
 
 tar_sub_expr <- function(expr, values) {
-  lang <- substitute(
+  as.expression(tar_sub_lang(expr, values))
+}
+
+tar_sub_lang <- function(expr, values) {
+  out <- substitute(
     substitute(expr = expr, env = env),
     env = list(expr = expr, env = values)
   )
-  as.expression(eval(lang))
+  eval(out)
 }

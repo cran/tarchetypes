@@ -1,19 +1,31 @@
 #' @title Static branching.
 #' @export
+#' @family branching
 #' @description Define multiple new targets based on existing target objects.
 #' @details `tar_map()` creates collections of new
 #'   targets by iterating over a list of arguments
 #'   and substituting symbols into commands and pattern statements.
+#' @section Target objects:
+#'   Most `tarchetypes` functions are target factories,
+#'   which means they return target objects
+#'   or lists of target objects.
+#'   Target objects represent skippable steps of the analysis pipeline
+#'   as described at <https://books.ropensci.org/targets/>.
+#'   Please read the walkthrough at
+#'   <https://books.ropensci.org/targets/walkthrough.html>
+#'   to understand the role of target objects in analysis pipelines.
+#'
+#'   For developers,
+#'   <https://wlandau.github.io/targetopia/contributing.html#target-factories>
+#'   explains target factories (functions like this one which generate targets)
+#'   and the design specification at
+#'   <https://books.ropensci.org/targets-design/>
+#'   details the structure and composition of target objects.
 #' @return A list of new target objects. If `unlist` is `FALSE`,
 #'   the list is nested and sub-lists are named and grouped by the original
 #'   input targets. If `unlist = TRUE`, the return value is a flat list of
 #'   targets named by the new target names.
-#'
-#'   Target objects represent skippable steps of the analysis pipeline
-#'   as described at <https://books.ropensci.org/targets/>.
-#'   Please see the design specification at
-#'   <https://books.ropensci.org/targets-design/>
-#'   to learn about the structure and composition of target objects.
+#'   See the "Target objects" section for background.
 #' @param values Named list or data frame with values to iterate over.
 #'   The names are the names of symbols in the commands and pattern
 #'   statements, and the elements are values that get substituted
@@ -62,7 +74,7 @@ tar_map <- function(
   values <- tar_map_extend_values(targets, values, names)
   out <- lapply(targets, tar_map_target, values = values)
   flat <- unlist(out, recursive = TRUE)
-  trn(
+  if_any(
     unlist,
     set_names(flat, map_chr(flat, ~.x$settings$name)),
     set_names(out, map_chr(targets, ~.x$settings$name))
@@ -107,7 +119,7 @@ tar_map_iter <- function(values, target, command, pattern) {
   name <- as.character(values[[settings$name]])
   command <- substitute_expr(command, values)
   pattern <- substitute_expr(pattern, values) %||% NULL
-  tar_target_raw(
+  targets::tar_target_raw(
     name = name,
     command = command,
     pattern = pattern,
@@ -123,6 +135,13 @@ tar_map_iter <- function(values, target, command, pattern) {
     resources = settings$resources,
     storage = settings$storage,
     retrieval = settings$retrieval,
-    cue = target$cue
+    cue = targets::tar_cue(
+      mode = target$cue$mode,
+      command = target$cue$command,
+      depend = target$cue$depend,
+      format = target$cue$format,
+      iteration = target$cue$iteration,
+      file = target$cue$file
+    )
   )
 }

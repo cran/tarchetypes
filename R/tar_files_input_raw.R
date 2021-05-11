@@ -1,6 +1,7 @@
 #' @title Easy dynamic branching over known existing
 #'   files or urls (raw version).
 #' @export
+#' @family Dynamic branching over files
 #' @description Shorthand for a pattern that correctly
 #'   branches over files or urls.
 #' @details `tar_files_input_raw()` is similar to [tar_files_input()]
@@ -17,17 +18,13 @@
 #'   For more information, visit
 #'   <https://github.com/ropensci/targets/issues/136> and
 #'   <https://github.com/ropensci/drake/issues/1302>.
-#' @export
-#' @inheritParams targets::tar_target
 #' @return A list of two targets, one upstream and one downstream.
 #'   The upstream one does some work and returns some file paths,
 #'   and the downstream target is a pattern that applies `format = "file"`
 #'   or `format = "url"`.
-#'   Target objects represent skippable steps of the analysis pipeline
-#'   as described at <https://books.ropensci.org/targets/>.
-#'   Please see the design specification at
-#'   <https://books.ropensci.org/targets-design/>
-#'   to learn about the structure and composition of target objects.
+#'   See the "Target objects" section for background.
+#' @inheritSection tar_map Target objects
+#' @inheritParams targets::tar_target
 #' @param files Nonempty character vector of known existing input files
 #'   to track for changes.
 #' @param batches Positive integer of length 1, number of batches
@@ -88,7 +85,7 @@ tar_files_input_raw <- function(
   format <- match.arg(format)
   name_files <- paste0(name, "_files")
   files <- tar_files_input_batch_files(files, batches)
-  upstream <- tar_target_raw(
+  upstream <- targets::tar_target_raw(
     name = name_files,
     command = parse(text = deparse_safe(files, collapse = " ")),
     pattern = NULL,
@@ -106,7 +103,7 @@ tar_files_input_raw <- function(
     cue = cue
   )
   name_files_sym <- as.symbol(name_files)
-  downstream <- tar_target_raw(
+  downstream <- targets::tar_target_raw(
     name = name,
     command = as.expression(name_files_sym),
     pattern = as.expression(call_function("map", list(name_files_sym))),
@@ -130,7 +127,7 @@ tar_files_input_raw <- function(
 
 tar_files_input_batch_files <- function(files, batches) {
   batches <- min(batches, length(files))
-  index <- trn(
+  index <- if_any(
     batches > 1L,
     as.integer(cut(seq_along(files), breaks = batches)),
     rep(1L, length(files))

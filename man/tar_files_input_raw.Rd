@@ -55,7 +55,11 @@ in order to support batching.}
 \item{error}{Character of length 1, what to do if the target
 runs into an error. If \code{"stop"}, the whole pipeline stops
 and throws an error. If \code{"continue"}, the error is recorded,
-but the pipeline keeps going.}
+but the pipeline keeps going. \code{error = "workspace"} is just like
+\code{error = "stop"} except \code{targets} saves a special workspace file
+to support interactive debugging outside the pipeline.
+(Visit \url{https://books.ropensci.org/targets/debugging.html}
+to learn how to debug targets using saved workspaces.)}
 
 \item{memory}{Character of length 1, memory strategy.
 If \code{"persistent"}, the target stays in memory
@@ -120,11 +124,7 @@ A list of two targets, one upstream and one downstream.
 The upstream one does some work and returns some file paths,
 and the downstream target is a pattern that applies \code{format = "file"}
 or \code{format = "url"}.
-Target objects represent skippable steps of the analysis pipeline
-as described at \url{https://books.ropensci.org/targets/}.
-Please see the design specification at
-\url{https://books.ropensci.org/targets-design/}
-to learn about the structure and composition of target objects.
+See the "Target objects" section for background.
 }
 \description{
 Shorthand for a pattern that correctly
@@ -146,6 +146,25 @@ For more information, visit
 \url{https://github.com/ropensci/targets/issues/136} and
 \url{https://github.com/ropensci/drake/issues/1302}.
 }
+\section{Target objects}{
+
+Most \code{tarchetypes} functions are target factories,
+which means they return target objects
+or lists of target objects.
+Target objects represent skippable steps of the analysis pipeline
+as described at \url{https://books.ropensci.org/targets/}.
+Please read the walkthrough at
+\url{https://books.ropensci.org/targets/walkthrough.html}
+to understand the role of target objects in analysis pipelines.
+
+For developers,
+\url{https://wlandau.github.io/targetopia/contributing.html#target-factories}
+explains target factories (functions like this one which generate targets)
+and the design specification at
+\url{https://books.ropensci.org/targets-design/}
+details the structure and composition of target objects.
+}
+
 \examples{
 if (identical(Sys.getenv("TAR_LONG_EXAMPLES"), "true")) {
 targets::tar_dir({ # tar_dir() runs code from a temporary directory.
@@ -168,3 +187,10 @@ targets::tar_read(x, branches = 1)
 })
 }
 }
+\seealso{
+Other Dynamic branching over files: 
+\code{\link{tar_files_input}()},
+\code{\link{tar_files_raw}()},
+\code{\link{tar_files}()}
+}
+\concept{Dynamic branching over files}

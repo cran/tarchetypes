@@ -1,5 +1,6 @@
 #' @title Target with a knitr document (raw version).
 #' @export
+#' @family Literate programming targets
 #' @description Shorthand to include a knitr document in a
 #'   `targets` pipeline (raw version)
 #' @details `tar_knit_raw()` is just like `tar_knit()`
@@ -14,12 +15,8 @@
 #'   all returned paths are *relative* paths to ensure portability
 #'   (so that the project can be moved from one file system to another
 #'   without invalidating the target).
-#'
-#'   Target objects represent skippable steps of the analysis pipeline
-#'   as described at <https://books.ropensci.org/targets/>.
-#'   Please see the design specification at
-#'   <https://books.ropensci.org/targets-design/>
-#'   to learn about the structure and composition of target objects.
+#'   See the "Target objects" section for background.
+#' @inheritSection tar_map Target objects
 #' @inheritParams tar_knit
 #' @param name Character of length 1, name of the target.
 #' @param knit_arguments Optional language object with a list
@@ -79,7 +76,7 @@ tar_knit_raw <- function(
   assert_lang(knit_arguments, "knit_arguments must be a language object.")
   msg <- "knit_arguments must not be an expression object."
   assert_not_expr(knit_arguments, msg)
-  tar_target_raw(
+  targets::tar_target_raw(
     name = name,
     command = tar_knit_command(path, knit_arguments, quiet),
     packages = packages,

@@ -1,4 +1,5 @@
 #' @title A `drake`-plan-like pipeline archetype
+#' @export
 #' @description Simplify target specification in pipelines.
 #' @details Allows targets with just targets and commands
 #'   to be written in the pipeline as `target = command` instead of
@@ -7,13 +8,10 @@
 #'   `tar_plan(x = 1, y = 2, tar_target(z, 3), tar_render(r, "r.Rmd"))`
 #'   is equivalent to
 #'   `list(tar_target(x, 1), tar_target(y, 2), tar_target(z, 3), tar_render(r, "r.Rmd"))`. # nolint
-#' @export
+#' @family Pipeline factories
 #' @return A list of `tar_target()` objects.
-#'   Target objects represent skippable steps of the analysis pipeline
-#'   as described at <https://books.ropensci.org/targets/>.
-#'   Please see the design specification at
-#'   <https://books.ropensci.org/targets-design/>
-#'   to learn about the structure and composition of target objects.
+#'   See the "Target objects" section for background.
+#' @inheritSection tar_map Target objects
 #' @param ... Named and unnamed targets. All named targets must follow
 #'   the `drake`-plan-like `target = command` syntax, and all unnamed
 #'   arguments must be explicit calls to create target objects,
@@ -37,6 +35,7 @@ tar_plan <- function(...) {
 }
 
 tar_plan_parse <- function(commands) {
+  commands <- commands[!map_lgl(commands, rlang::is_missing)]
   names <- names(commands) %|||% rep("", length(commands))
   is_named <- !is.na(names) & nzchar(names)
   commands[is_named] <- tar_plan_parse_named(commands[is_named])

@@ -1,5 +1,6 @@
 #' @title Expression with literate programming dependencies.
 #' @export
+#' @family Literate programming utilities
 #' @description Construct an expression whose global variable dependencies
 #'   are the target dependencies of one or more literate programming reports
 #'   (R Markdown or `knitr`). This helps third-party developers create their

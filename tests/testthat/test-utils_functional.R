@@ -9,3 +9,8 @@ targets::tar_test("map_chr()", {
 targets::tar_test("map_int()", {
   expect_equal(unname(map_int(letters, ~length(.x))), rep(1, length(letters)))
 })
+
+targets::tar_test("map_lgl()", {
+  out <- unname(map_lgl(seq_len(4L), ~ (.x > 2.5)))
+  expect_equal(out, c(FALSE, FALSE, TRUE, TRUE))
+})

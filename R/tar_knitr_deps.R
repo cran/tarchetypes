@@ -1,5 +1,6 @@
 #' @title List literate programming dependencies.
 #' @export
+#' @family Literate programming utilities
 #' @description List the target dependencies of one or more
 #'   literate programming reports (R Markdown or `knitr`).
 #' @return Character vector of the names of targets

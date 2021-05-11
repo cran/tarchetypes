@@ -1,5 +1,6 @@
 #' @title Target with an R Markdown document (raw version).
 #' @export
+#' @family Literate programming targets
 #' @description Shorthand to include an R Markdown document in a
 #'   `targets` pipeline (raw version)
 #' @details `tar_render_raw()` is just like `tar_render()`
@@ -14,12 +15,8 @@
 #'   all returned paths are *relative* paths to ensure portability
 #'   (so that the project can be moved from one file system to another
 #'   without invalidating the target).
-#'
-#'   Target objects represent skippable steps of the analysis pipeline
-#'   as described at <https://books.ropensci.org/targets/>.
-#'   Please see the design specification at
-#'   <https://books.ropensci.org/targets-design/>
-#'   to learn about the structure and composition of target objects.
+#'   See the "Target objects" section for background.
+#' @inheritSection tar_map Target objects
 #' @inheritParams tar_render
 #' @param name Character of length 1, name of the target.
 #' @param render_arguments Optional language object with a list
@@ -105,7 +102,7 @@ tar_render_raw <- function(
   assert_lang(render_arguments, "render_arguments must be a language object.")
   msg <- "render_arguments must not be an expression object."
   assert_not_expr(render_arguments, msg)
-  tar_target_raw(
+  targets::tar_target_raw(
     name = name,
     command = tar_render_command(path, render_arguments, quiet),
     packages = packages,
@@ -157,6 +154,6 @@ tar_render_paths <- function(output, source) {
   output <- fs::path_rel(output)
   source <- fs::path_rel(source)
   files <- paste0(fs::path_ext_remove(output), "_files")
-  files <- trn(all(file.exists(files)), files, character(0))
+  files <- if_any(all(file.exists(files)), files, character(0))
   c(output, source, files)
 }

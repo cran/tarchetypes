@@ -1,5 +1,6 @@
 #' @title Easy dynamic branching over files or urls (raw version).
 #' @export
+#' @family Dynamic branching over files
 #' @description Shorthand for a pattern that correctly
 #'   branches over files or urls.
 #' @details `tar_files_raw()` is similar to [tar_files()]
@@ -21,6 +22,8 @@
 #'   The upstream one does some work and returns some file paths,
 #'   and the downstream target is a pattern that applies `format = "file"`
 #'   or `format = "url"`.
+#'   See the "Target objects" section for background.
+#' @inheritSection tar_map Target objects
 #' @inheritParams targets::tar_target
 #' @param format Character of length 1.
 #'   Must be `"file"`, `"url"`, or `"aws_file"`. See the `format`
@@ -67,7 +70,7 @@ tar_files_raw <- function(
   assert_lang(command, "command must be a language object.")
   name_files <- paste0(name, "_files")
   format <- match.arg(format)
-  upstream <- tar_target_raw(
+  upstream <- targets::tar_target_raw(
     name = name_files,
     command = command,
     pattern = NULL,
@@ -86,7 +89,7 @@ tar_files_raw <- function(
     cue = targets::tar_cue(mode = "always")
   )
   name_files_sym <- as.symbol(name_files)
-  downstream <- tar_target_raw(
+  downstream <- targets::tar_target_raw(
     name = name,
     command = as.expression(name_files_sym),
     pattern = as.expression(call_function("map", list(name_files_sym))),
