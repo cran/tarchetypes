@@ -13,6 +13,11 @@ statements, and the elements are values that get substituted
 in place of those symbols. Elements of the \code{values} list
 should be small objects that can easily deparse to names,
 such as characters, integers, and symbols.
+For more complicated elements of \code{values}, such as
+lists with multiple numeric vectors,
+\code{tar_map()} attempts to parse the elements into expressions,
+but this process is not perfect, and the default
+target names come out garbled.
 To create a list of symbols as a column of \code{values},
 use \code{rlang::syms()}.}
 
@@ -84,6 +89,8 @@ targets::tar_manifest()
 Other branching: 
 \code{\link{tar_combine_raw}()},
 \code{\link{tar_combine}()},
+\code{\link{tar_rep_map_raw}()},
+\code{\link{tar_rep_map}()},
 \code{\link{tar_rep_raw}()},
 \code{\link{tar_rep}()}
 }

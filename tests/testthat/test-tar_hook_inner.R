@@ -85,19 +85,22 @@ targets::tar_test("tar_hook_inner() with tidyselect on names_wrap", {
 })
 
 targets::tar_test("tar_hook_inner() with no replacement", {
+  skip_on_cran()
+  skip_if(!exists("tar_resources", getNamespace("targets")))
+  resources <- targets::tar_resources(qs = targets::tar_resources_qs())
   x <- targets::tar_target(
     "a",
     b,
     pattern = map(c),
     format = "file",
-    resources = list(x = 1)
+    resources = resources
   )
   y <- targets::tar_target(
     "a",
     b,
     pattern = map(c),
     format = "file",
-    resources = list(x = 1)
+    resources = resources
   )
   for (field in c("packages", "library", "deps", "seed", "string", "hash")) {
     expect_equal(x$command[[field]], y$command[[field]])
@@ -126,19 +129,22 @@ targets::tar_test("tar_hook_inner() with no replacement", {
 })
 
 targets::tar_test("tar_hook_inner() changes internals properly", {
+  skip_on_cran()
+  skip_if(!exists("tar_resources", getNamespace("targets")))
+  resources <- targets::tar_resources(qs = targets::tar_resources_qs())
   x <- targets::tar_target(
     "a",
     b,
     pattern = map(c),
     format = "file",
-    resources = list(x = 1)
+    resources = resources
   )
   y <- targets::tar_target(
     "a",
     b,
     pattern = map(c),
     format = "file",
-    resources = list(x = 1)
+    resources = resources
   )
   for (field in c("packages", "library", "deps", "seed", "string", "hash")) {
     expect_equal(x$command[[field]], y$command[[field]])
@@ -214,7 +220,8 @@ targets::tar_test("inner hook invalidates target", {
   })
   expect_equal(targets::tar_outdated(callr_function = NULL), "b")
   targets::tar_make(callr_function = NULL)
-  out <- targets::tar_progress()
-  expect_equal(out$name, "b")
-  expect_equal(out$progress, "built")
+  progress <- targets::tar_progress()
+  progress <- progress[progress$progress != "skipped", ]
+  expect_equal(progress$name, "b")
+  expect_equal(progress$progress, "built")
 })

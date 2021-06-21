@@ -1,3 +1,16 @@
+# tarchetypes 0.2.1
+
+## Bug fixes
+
+* Make the `*_raw()` target factories process `command` the same way whether it is an expression or ordinary language object.
+* Ensure compatibility with `targets` 0.5.0.9000, which logs skipped targets.
+
+## New features
+
+* Add `tar_rep_map()` and `tar_rep_map_raw()` to perform batched computation downstream of `tar_rep()` (#50).
+* Add `tar_select_names()` and `tar_select_targets()` to make certain metaprogramming tasks easier.
+* In `tar_map()`, attempt to convert the elements of `values` into lists of language objects.
+
 # tarchetypes 0.2.0
 
 * Allow trailing commas in `tar_plan()` (#40, @kendonB).

@@ -66,6 +66,7 @@ targets::tar_test("tar_files_input() correctly responds to changes in files", {
   expect_equal(length(unique(meta$data)), 2L)
   progress <- targets::tar_progress(starts_with("x_"))
   progress <- progress[progress$name != "x_files", ]
+  progress <- progress[progress$progress != "skipped", ]
   expect_equal(nrow(progress), 1L)
   expect_equal(sum(grepl("built", progress$progress)), 1L)
   # results
@@ -76,7 +77,7 @@ targets::tar_test("tar_files_input() correctly responds to changes in files", {
   )
   expect_equal(out, exp)
   out <- targets::tar_read(x, branches = 1)
-  expect_equal(out, c("a.txt", "b.txt"))
+  expect_equal(unname(out), c("a.txt", "b.txt"))
   out <- targets::tar_read(x, branches = 2)
-  expect_equal(out, c("c.txt", "d.txt"))
+  expect_equal(unname(out), c("c.txt", "d.txt"))
 })
