@@ -1,3 +1,13 @@
+# tarchetypes 0.3.0
+
+## Invalidating changes
+
+* When `names = NULL` in `tar_map()`, use hashes instead of numeric indexes for generated target names (#67). That way, target names are no longer sensitive to the order of `values`, and so targets will incorrectly invalidate less often. *Unfortunately, this is an invalidating change: some targets will automatically rerun after you install this version of `tarchetypes`.* I apologize for the inconvenience this causes. However, we do need this patch in order to solve #67, and targets will incorrectly invalidate less frequently in the future.
+
+## Enhancements
+
+* Migrate to utilities for error handling and metaprogramming exported from `targets` (#59).
+
 # tarchetypes 0.2.1
 
 ## Bug fixes

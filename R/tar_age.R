@@ -9,14 +9,16 @@
 #'   uses the time stamps from `tar_meta()$time`.
 #'   If no time stamp is recorded, the cue defaults to the ordinary
 #'   invalidation rules (i.e. `mode = "thorough"` in `targets::tar_cue()`).
-#'   That means `tar_age()` cannot help with input file targets
-#'   or URL targets (but if you are using `format = "url"`
-#'   and your URLs have either ETags or "last-modified" time stamps,
-#'   then you are better off without `tar_age()` anyway.)
-#'
-#'   In dynamic branching, cues operate on all branches at once,
-#'   so `tar_age()` reruns when *any* branch reaches the age
-#'   threshold in the `age` argument.
+#' @section Dynamic branches at regular time intervals:
+#'   Time stamps are not recorded for whole dynamic targets,
+#'   so `tar_age()` is not a good fit for dynamic branching.
+#'   To invalidate dynamic branches at regular intervals,
+#'   it is recommended to use `targets::tar_older()` in combine
+#'   with `targets::tar_invalidate()` right before calling `tar_make()`.
+#'   For example,
+#'   `tar_invalidate(all_of(tar_older(Sys.time - as.difftime(1, units = "weeks"))))` # nolint
+#'   invalidates all targets more than a week old. Then, the next `tar_make()`
+#'   will rerun those targets.
 #' @return A target object. See the "Target objects" section for background.
 #' @inheritSection tar_map Target objects
 #' @inheritParams tar_cue_age_raw
@@ -65,12 +67,12 @@ tar_age <- function(
   retrieval = targets::tar_option_get("retrieval"),
   cue = targets::tar_option_get("cue")
 ) {
-  name <- deparse_language(substitute(name))
+  name <- targets::tar_deparse_language(substitute(name))
   envir <- tar_option_get("envir")
   command <- as.expression(substitute(command))
   pattern <- as.expression(substitute(pattern))
-  command <- tar_tidy_eval(command, envir, tidy_eval)
-  pattern <- tar_tidy_eval(pattern, envir, tidy_eval)
+  command <- targets::tar_tidy_eval(command, envir, tidy_eval)
+  pattern <- targets::tar_tidy_eval(pattern, envir, tidy_eval)
   cue <- tar_cue_age_raw(
     name = name,
     age = age,

@@ -13,10 +13,7 @@
 #' @details `tar_cue_age_raw()` uses the time stamps from `tar_meta()$time`.
 #'   If no time stamp is recorded, the cue defaults to the ordinary
 #'   invalidation rules (i.e. `mode = "thorough"` in `targets::tar_cue()`).
-#'   That means `tar_cue_age_raw()` cannot help with input file targets
-#'   or URL targets (but if you are using `format = "url"`
-#'   and your URLs have either ETags or "last-modified" time stamps,
-#'   then you are better off without `tar_cue_age_raw()` anyway.)
+#' @inheritSection tar_age Dynamic branches at regular time intervals
 #' @return A cue object. See the "Cue objects" section for background.
 #' @inheritSection tar_cue_force Cue objects
 #' @inheritParams targets::tar_cue
@@ -61,10 +58,10 @@ tar_cue_age_raw <- function(
   iteration = TRUE,
   file = TRUE
 ) {
-  assert_chr(name, "name must be a character.")
-  assert_scalar(name, "name must have length 1.")
-  assert_nzchar(name, "name must be nonempty.")
-  assert_inherits(
+  targets::tar_assert_chr(name, "name must be a character.")
+  targets::tar_assert_scalar(name, "name must have length 1.")
+  targets::tar_assert_nzchar(name, "name must be nonempty.")
+  targets::tar_assert_inherits(
     age,
     "difftime",
     "age must be a difftime object, e.g. as.difftime(3, units = \"days\")."
