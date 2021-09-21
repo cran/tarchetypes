@@ -6,14 +6,14 @@
 #'   In other words, the target reruns periodically at regular
 #'   intervals of time.
 #' @details `tar_age()` uses the cue from [tar_cue_age()], which
-#'   uses the time stamps from `tar_meta()$time`.
-#'   If no time stamp is recorded, the cue defaults to the ordinary
-#'   invalidation rules (i.e. `mode = "thorough"` in `targets::tar_cue()`).
+#'   uses the time stamps from `targets::tar_meta()$time`.
+#'   See the help file of `targets::tar_timestamp()`
+#'   for an explanation of how this time stamp is calculated.
 #' @section Dynamic branches at regular time intervals:
 #'   Time stamps are not recorded for whole dynamic targets,
 #'   so `tar_age()` is not a good fit for dynamic branching.
 #'   To invalidate dynamic branches at regular intervals,
-#'   it is recommended to use `targets::tar_older()` in combine
+#'   it is recommended to use `targets::tar_older()` in combination
 #'   with `targets::tar_invalidate()` right before calling `tar_make()`.
 #'   For example,
 #'   `tar_invalidate(all_of(tar_older(Sys.time - as.difftime(1, units = "weeks"))))` # nolint
