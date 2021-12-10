@@ -7,8 +7,9 @@
 #'   pipelines in targets easier and cleaner to write and understand.
 #' @name tarchetypes-package
 #' @importFrom digest digest
+#' @importFrom dplyr bind_rows mutate select
 #' @importFrom fs dir_create path_ext_remove path_rel
-#' @importFrom rlang as_function check_installed enquo expr
+#' @importFrom rlang as_function call2 check_installed enquo expr
 #'   inform is_missing quo_squash
 #' @importFrom targets tar_assert_chr tar_assert_dbl tar_assert_df
 #'   tar_assert_envir tar_assert_equal_lengths tar_assert_expr tar_assert_flag
@@ -26,7 +27,7 @@
 #'   tar_dir tar_envir tar_exist_meta
 #'   tar_group tar_load tar_meta tar_option_get tar_path tar_read tar_script
 #'   tar_target tar_target_raw tar_test tar_tidy_eval
-#'   tar_throw_validate tar_warn_validate
+#'   tar_throw_validate tar_warn_deprecate tar_warn_validate
 #' @importFrom tibble as_tibble
 #' @importFrom tidyselect all_of any_of contains ends_with everything
 #'   last_col matches num_range one_of starts_with
