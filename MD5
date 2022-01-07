@@ -1,7 +1,7 @@
-5c4c3a6f3a3ded57280fa9ad64622764 *DESCRIPTION
+178a4197f03952464f2e51d12f944069 *DESCRIPTION
 fe2d2df764c64759ba16b27d74c536bc *LICENSE
 80d22e962c0b276816cef886f8dc0ec4 *NAMESPACE
-cb51e8f40d84f3311b2834c867933aac *NEWS.md
+08f0076217311382bffec988f8323d2c *NEWS.md
 72b93a8d242b04ca253f8ed9f4823c5a *R/class_counter.R
 275c5e57e674c57d895fabbcc15e5e83 *R/tar_age.R
 b875d65b3583eb99410d26e349b16afa *R/tar_change.R
@@ -35,7 +35,7 @@ cbc1c6598ce63095115d638aaa44cf01 *R/tar_map.R
 3fd8a39668fc1c12ca40e94d3248bb4b *R/tar_map2.R
 3c6401ea1ac5d5326097ffbb42dcc707 *R/tar_map2_count.R
 2206de027c6bb9d82f80957d443deddd *R/tar_map2_count_raw.R
-aeef6fc35d87316a7d03866b6b2ef576 *R/tar_map2_raw.R
+52e0df97fab0569a3779e7ef5fb7f25c *R/tar_map2_raw.R
 93551fc369bd55dcafe3656f68f6053d *R/tar_map2_size.R
 978c29203bebb1381335e57b12a75e7f *R/tar_map2_size_raw.R
 03f6a006d1bd6c93d014ce0fc3242a10 *R/tar_map_rep.R
@@ -175,7 +175,7 @@ eb9cd1ffbb031fe6d8370ace0541b407 *tests/testthat/test-tar_knit_raw.R
 180c8fe9cf9b70936210ac2ef0fb075a *tests/testthat/test-tar_knitr_deps.R
 ce3b1f7eff805838005ad6e423bed882 *tests/testthat/test-tar_knitr_deps_expr.R
 20123c4046d9d4519761e3c0ba6e79e2 *tests/testthat/test-tar_map.R
-4e7e2f0ea173c4c0415eafe108e20d6a *tests/testthat/test-tar_map2.R
+92366e1c97f548e8250131ed4968ac82 *tests/testthat/test-tar_map2.R
 d6c7f8ebc641c13e1cabe9ceecd1f7fd *tests/testthat/test-tar_map2_count.R
 8507551daaef92da535e836bbffa6403 *tests/testthat/test-tar_map2_size.R
 59eef06848c895074d353f6017c17e48 *tests/testthat/test-tar_map_rep.R
