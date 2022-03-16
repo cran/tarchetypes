@@ -2,7 +2,7 @@
 % Please edit documentation in R/tar_files_raw.R
 \name{tar_files_raw}
 \alias{tar_files_raw}
-\title{Easy dynamic branching over files or urls (raw version).}
+\title{Dynamic branching over output or input files (raw version).}
 \usage{
 tar_files_raw(
   name,
@@ -77,6 +77,9 @@ stops and throws an error. Options:
 but no new targets launch after that.
 (Visit \url{https://books.ropensci.org/targets/debugging.html}
 to learn how to debug targets using saved workspaces.)
+\item \code{"null"}: The errored target continues and returns \code{NULL}.
+The data hash is deliberately wrong so the target is not
+up to date for the next run of the pipeline.
 }}
 
 \item{memory}{Character of length 1, memory strategy.
@@ -176,8 +179,7 @@ or \code{format = "url"}.
 See the "Target objects" section for background.
 }
 \description{
-Shorthand for a pattern that correctly
-branches over files or urls.
+Dynamic branching over output or input files.
 }
 \details{
 \code{tar_files_raw()} is similar to \code{\link[=tar_files]{tar_files()}}
@@ -188,7 +190,8 @@ and \code{command} must be a language object.
 and one downstream. The upstream target does some work
 and returns some file paths, and the downstream
 target is a pattern that applies \code{format = "file"}
-or \code{format = "url"}.
+or \code{format = "url"}. (URLs are input-only, they must already
+exist beforehand.)
 This is the correct way to dynamically
 iterate over file/url targets. It makes sure any downstream patterns
 only rerun some of their branches if the files/urls change.

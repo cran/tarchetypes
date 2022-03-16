@@ -1,3 +1,8 @@
+# tarchetypes 0.5.0
+
+* Implement `tar_file_read()` (#84, @petrbouchal).
+* Suppress warnings for deprecated AWS formats.
+
 # tarchetypes 0.4.1
 
 * Select list elements from `command1` using `[[` and not `[` in `tar_map2()` functions.
