@@ -13,6 +13,7 @@ tar_age(
   packages = targets::tar_option_get("packages"),
   library = targets::tar_option_get("library"),
   format = targets::tar_option_get("format"),
+  repository = targets::tar_option_get("repository"),
   iteration = targets::tar_option_get("iteration"),
   error = targets::tar_option_get("error"),
   memory = targets::tar_option_get("memory"),
@@ -53,7 +54,8 @@ when interpreting \code{command} and \code{pattern}. If \code{TRUE}, you can use
 the values of global objects.}
 
 \item{packages}{Character vector of packages to load right before
-the target builds. Use \code{tar_option_set()} to set packages
+the target builds or the output data is reloaded for
+downstream targets. Use \code{tar_option_set()} to set packages
 globally for all subsequent targets you define.}
 
 \item{library}{Character vector of library paths to try
@@ -62,6 +64,10 @@ when loading \code{packages}.}
 \item{format}{Logical, whether to rerun the target if the user-specified
 storage format changed. The storage format is user-specified through
 \code{\link[targets:tar_target]{tar_target()}} or \code{\link[targets:tar_option_set]{tar_option_set()}}.}
+
+\item{repository}{Logical, whether to rerun the target if the user-specified
+storage repository changed. The storage repository is user-specified
+through \code{\link[targets:tar_target]{tar_target()}} or \code{\link[targets:tar_option_set]{tar_option_set()}}.}
 
 \item{iteration}{Logical, whether to rerun the target if the user-specified
 iteration method changed. The iteration method is user-specified through

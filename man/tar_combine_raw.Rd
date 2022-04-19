@@ -13,6 +13,7 @@ tar_combine_raw(
   packages = targets::tar_option_get("packages"),
   library = targets::tar_option_get("library"),
   format = targets::tar_option_get("format"),
+  repository = targets::tar_option_get("repository"),
   iteration = targets::tar_option_get("iteration"),
   error = targets::tar_option_get("error"),
   memory = targets::tar_option_get("memory"),
@@ -45,7 +46,8 @@ informally quoted code.
 \code{base::expression()} and \code{base::quote()} can produce such objects.}
 
 \item{packages}{Character vector of packages to load right before
-the target builds. Use \code{tar_option_set()} to set packages
+the target builds or the output data is reloaded for
+downstream targets. Use \code{tar_option_set()} to set packages
 globally for all subsequent targets you define.}
 
 \item{library}{Character vector of library paths to try
@@ -56,6 +58,23 @@ With the exception of \code{format = "file"}, each target
 gets a file in \verb{_targets/objects}, and each format is a different
 way to save and load this file. See the "Storage formats" section
 for a detailed list of possible data storage formats.}
+
+\item{repository}{Character of length 1, remote repository for target
+storage. Choices:
+\itemize{
+\item \code{"local"}: file system of the local machine.
+\item \code{"aws"}: Amazon Web Services (AWS) S3 bucket. Can be configured
+with a non-AWS S3 bucket using the \code{endpoint} argument of
+\code{\link[targets:tar_resources_aws]{tar_resources_aws()}}, but versioning capabilities may be lost
+in doing so.
+See the cloud storage section of
+\url{https://books.ropensci.org/targets/data.html}
+for details for instructions.
+\item \code{"gcp"}: Google Cloud Platform storage bucket.
+See the cloud storage section of
+\url{https://books.ropensci.org/targets/data.html}
+for details for instructions.
+}}
 
 \item{iteration}{Character of length 1, name of the iteration mode
 of the target. Choices:
