@@ -50,6 +50,8 @@
 #'   and one column per R Markdown parameter. You may also include an
 #'   `output_file` column to specify the path of each rendered report.
 #'   R Markdown parameters must not be named `tar_group` or `output_file`.
+#'   This `params` argument is converted into the command for a target
+#'   that supplies the R Markdown parameters.
 #' @param batches Number of batches to group the R Markdown files.
 #'   For a large number of reports, increase the number of batches
 #'   to decrease target-level overhead. Defaults to the number of
@@ -103,6 +105,8 @@ tar_render_rep_raw <- function(
   format = targets::tar_option_get("format"),
   iteration = targets::tar_option_get("iteration"),
   error = targets::tar_option_get("error"),
+  memory = targets::tar_option_get("memory"),
+  garbage_collection = targets::tar_option_get("garbage_collection"),
   deployment = targets::tar_option_get("deployment"),
   priority = targets::tar_option_get("priority"),
   resources = targets::tar_option_get("resources"),
@@ -134,6 +138,8 @@ tar_render_rep_raw <- function(
     format = format,
     iteration = "group",
     error = error,
+    memory = memory,
+    garbage_collection = garbage_collection,
     deployment = deployment,
     priority = priority,
     resources = resources,
@@ -150,6 +156,8 @@ tar_render_rep_raw <- function(
     repository = "local",
     iteration = iteration,
     error = error,
+    memory = memory,
+    garbage_collection = garbage_collection,
     deployment = deployment,
     priority = priority,
     resources = resources,
@@ -175,9 +183,44 @@ tar_render_rep_params_command <- function(params, batches) {
 #' @return A batched data frame of R Markdown parameters.
 #' @param params Data frame of R Markdown parameters.
 #' @param batches Number of batches to split up the renderings.
+#' @examples
+#' params <- tibble::tibble(param1 = letters[seq_len(4)])
+#' tar_render_rep_run_params(params, 1)
+#' tar_render_rep_run_params(params, 2)
+#' tar_render_rep_run_params(params, 3)
+#' tar_render_rep_run_params(params, 4)
 tar_render_rep_run_params <- function(params, batches) {
+  targets::tar_assert_df(params)
+  illegal <- "tar_group"
+  intersect <- intersect(illegal, colnames(params))
+  targets::tar_assert_le(
+    length(intersect),
+    0L,
+    paste(
+      "illegal columns in params:",
+      paste(intersect, collapse = ", ")
+    )
+  )
+  if ("output_file" %in% colnames(params)) {
+    targets::tar_assert_unique(
+      params$output_file,
+      msg = paste(
+        "If an output_file column is given in the params argument of",
+        "tar_render_rep(), then all the output files must be unique."
+      )
+    )
+  } else {
+    targets::tar_assert_unique(
+      hash_rows(params),
+      msg = "Rows of params in tar_render_rep() must be unique."
+    )
+  }
   batches <- batches %|||% nrow(params)
-  params$tar_group <- as.integer(cut(seq_len(nrow(params)), breaks = batches))
+  params$tar_group <- if_any(
+    batches > 1L,
+    as.integer(cut(seq_len(nrow(params)), breaks = batches)),
+    rep(1L, nrow(params))
+  )
   params
 }
 
@@ -207,6 +250,8 @@ tar_render_rep_command <- function(name, path, quiet, args) {
 #'   report, automatically created by `tar_render_rep()`.
 tar_render_rep_run <- function(path, params, args, deps) {
   targets::tar_assert_package("rmarkdown")
+  rm(deps)
+  gc()
   envir <- parent.frame()
   params <- split(params, f = seq_len(nrow(params)))
   args$envir <- args$envir %|||% targets::tar_envir(default = envir)
@@ -229,6 +274,5 @@ tar_render_rep_rep <- function(path, params, args) {
 tar_render_rep_default_path <- function(path, params) {
   out <- fs::path_ext_remove(path)
   hash <- digest::digest(params, algo = "xxhash32")
-  out <- paste0(out, "_", hash)
-  out
+  sprintf("%s_%s", out, hash)
 }

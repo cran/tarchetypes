@@ -45,6 +45,8 @@
 #'   with one row per rendered report
 #'   and one column per R Markdown parameter. You may also include an
 #'   `output_file` column to specify the path of each rendered report.
+#'   This `params` argument is converted into the command for a target
+#'   that supplies the R Markdown parameters.
 #' @param ... Other named arguments to `rmarkdown::render()`.
 #'   Unlike [tar_render()], these arguments are evaluated when the target
 #'   is defined, not when it is run. (The only reason to delay evaluation
@@ -90,6 +92,8 @@ tar_render_rep <- function(
   format = targets::tar_option_get("format"),
   iteration = targets::tar_option_get("iteration"),
   error = targets::tar_option_get("error"),
+  memory = targets::tar_option_get("memory"),
+  garbage_collection = targets::tar_option_get("garbage_collection"),
   deployment = targets::tar_option_get("deployment"),
   priority = targets::tar_option_get("priority"),
   resources = targets::tar_option_get("resources"),
@@ -108,6 +112,8 @@ tar_render_rep <- function(
     format = format,
     iteration = iteration,
     error = error,
+    memory = memory,
+    garbage_collection = garbage_collection,
     deployment = deployment,
     priority = priority,
     resources = resources,

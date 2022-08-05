@@ -11,6 +11,8 @@ tar_knit(
   packages = targets::tar_option_get("packages"),
   library = targets::tar_option_get("library"),
   error = targets::tar_option_get("error"),
+  memory = targets::tar_option_get("memory"),
+  garbage_collection = targets::tar_option_get("garbage_collection"),
   deployment = "main",
   priority = targets::tar_option_get("priority"),
   resources = targets::tar_option_get("resources"),
@@ -66,6 +68,29 @@ to learn how to debug targets using saved workspaces.)
 The data hash is deliberately wrong so the target is not
 up to date for the next run of the pipeline.
 }}
+
+\item{memory}{Character of length 1, memory strategy.
+If \code{"persistent"}, the target stays in memory
+until the end of the pipeline (unless \code{storage} is \code{"worker"},
+in which case \code{targets} unloads the value from memory
+right after storing it in order to avoid sending
+copious data over a network).
+If \code{"transient"}, the target gets unloaded
+after every new target completes.
+Either way, the target gets automatically loaded into memory
+whenever another target needs the value.
+For cloud-based dynamic files
+(e.g. \code{format = "file"} with \code{repository = "aws"}),
+this memory strategy applies to the
+temporary local copy of the file:
+\code{"persistent"} means it remains until the end of the pipeline
+and is then deleted,
+and \code{"transient"} means it gets deleted as soon as possible.
+The former conserves bandwidth,
+and the latter conserves local storage.}
+
+\item{garbage_collection}{Logical, whether to run \code{base::gc()}
+just before the target runs.}
 
 \item{deployment}{Character of length 1, only relevant to
 \code{\link[targets:tar_make_clustermq]{tar_make_clustermq()}} and \code{\link[targets:tar_make_future]{tar_make_future()}}. If \code{"worker"},
@@ -192,6 +217,10 @@ targets::tar_make()
 \seealso{
 Other Literate programming targets: 
 \code{\link{tar_knit_raw}()},
+\code{\link{tar_quarto_raw}()},
+\code{\link{tar_quarto_rep_raw}()},
+\code{\link{tar_quarto_rep}()},
+\code{\link{tar_quarto}()},
 \code{\link{tar_render_raw}()},
 \code{\link{tar_render_rep_raw}()},
 \code{\link{tar_render_rep}()},

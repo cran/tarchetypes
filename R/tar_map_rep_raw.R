@@ -81,6 +81,7 @@ tar_map_rep_raw <- function(
   repository = targets::tar_option_get("repository"),
   error = targets::tar_option_get("error"),
   memory = targets::tar_option_get("memory"),
+  garbage_collection = targets::tar_option_get("garbage_collection"),
   deployment = targets::tar_option_get("deployment"),
   priority = targets::tar_option_get("priority"),
   resources = targets::tar_option_get("resources"),
@@ -119,9 +120,11 @@ tar_map_rep_raw <- function(
     name = name_batch,
     command = substitute(seq_len(batches), env = list(batches = batches)),
     packages = character(0),
+    format = "rds",
     iteration = "vector",
     error = error,
     memory = memory,
+    garbage_collection = garbage_collection,
     deployment = "main",
     priority = priority,
     storage = "main",
@@ -139,6 +142,7 @@ tar_map_rep_raw <- function(
     iteration = "vector",
     error = error,
     memory = memory,
+    garbage_collection = garbage_collection,
     deployment = deployment,
     priority = priority,
     resources = resources,
@@ -168,6 +172,7 @@ tar_map_rep_raw <- function(
       iteration = "group",
       error = error,
       memory = memory,
+      garbage_collection = garbage_collection,
       deployment = "main",
       priority = priority,
       cue = cue
@@ -210,7 +215,7 @@ tar_append_static_values <- function(object, values) {
   args <- list(.data = object)
   for (name in setdiff(names(values), names(object))) {
     args[[name]] <- if_any(
-      length(values[[name]]) == 1L,
+      length(values[[name]]) == 1L && is.atomic(values[[name]]),
       values[[name]],
       list(values[[name]])
     )

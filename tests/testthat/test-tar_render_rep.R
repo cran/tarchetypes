@@ -1,5 +1,5 @@
 targets::tar_test("tar_render_rep() manifest", {
-  skip_pandoc()
+  skip_rmarkdown()
   lines <- c(
     "---",
     "title: report",
@@ -37,7 +37,7 @@ targets::tar_test("tar_render_rep() manifest", {
 })
 
 targets::tar_test("tar_render_rep() graph", {
-  skip_pandoc()
+  skip_rmarkdown()
   lines <- c(
     "---",
     "title: report",
@@ -75,7 +75,7 @@ targets::tar_test("tar_render_rep() graph", {
 
 targets::tar_test("tar_render_rep() run", {
   skip_on_cran()
-  skip_pandoc()
+  skip_rmarkdown()
   lines <- c(
     "---",
     "title: report",
@@ -184,7 +184,7 @@ targets::tar_test("tar_render_rep() run", {
 
 targets::tar_test("tar_render_rep() run with output_file specified", {
   skip_on_cran()
-  skip_pandoc()
+  skip_rmarkdown()
   lines <- c(
     "---",
     "title: report",
@@ -224,7 +224,7 @@ targets::tar_test("tar_render_rep() run with output_file specified", {
 
 targets::tar_test("tar_render_rep() with output_file and _files", {
   skip_on_cran()
-  skip_pandoc()
+  skip_rmarkdown()
   lines <- c(
     "---",
     "title: report",
@@ -264,4 +264,20 @@ targets::tar_test("tar_render_rep() with output_file and _files", {
     exp <- c(report, "report.Rmd", paste0(base, "_files"))
     expect_equal(out, exp)
   }
+})
+
+targets::tar_test("tar_render_rep_run_params", {
+  params <- tibble::tibble(param1 = letters[seq_len(4)])
+  out <- tar_render_rep_run_params(params, 1)
+  expect_equal(out$param1, letters[seq_len(4)])
+  expect_equal(out$tar_group, rep(1, 4))
+  out <- tar_render_rep_run_params(params, 2)
+  expect_equal(out$param1, letters[seq_len(4)])
+  expect_equal(out$tar_group, c(1, 1, 2, 2))
+  out <- tar_render_rep_run_params(params, 3)
+  expect_equal(out$param1, letters[seq_len(4)])
+  expect_equal(sort(unique(out$tar_group)), sort(c(1, 2, 3)))
+  out <- tar_render_rep_run_params(params, 4)
+  expect_equal(out$param1, letters[seq_len(4)])
+  expect_equal(out$tar_group, seq_len(4))
 })
