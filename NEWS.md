@@ -1,3 +1,8 @@
+# tarchetypes 0.7.1
+
+* Document <https://github.com/ropensci/tarchetypes/discussions/105> (@MarekGierlinski).
+* Adapt tests to changes in `tar_manfiest()` default output.
+
 # tarchetypes 0.7.0
 
 * Add new functions `tar_quarto()` and `tar_quarto_rep()` (and "raw" versions) for Quarto documents and projects in pipelines (#89).

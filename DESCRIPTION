@@ -9,7 +9,7 @@ Description: Function-oriented Make-like declarative workflows for
   reproducible workflows concisely and compactly.
   The methods in this package were influenced by the 'drake' R package
   by Will Landau (2018) <doi:10.21105/joss.00550>.
-Version: 0.7.0
+Version: 0.7.1
 License: MIT + file LICENSE
 URL: https://docs.ropensci.org/tarchetypes/,
         https://github.com/ropensci/tarchetypes
@@ -49,7 +49,7 @@ Language: en-US
 Config/testthat/edition: 3
 RoxygenNote: 7.2.1
 NeedsCompilation: no
-Packaged: 2022-08-05 08:59:00 UTC; c240390
+Packaged: 2022-09-07 13:39:58 UTC; c240390
 Author: William Michael Landau [aut, cre]
     (<https://orcid.org/0000-0003-1878-3253>),
   Samantha Oliver [rev] (<https://orcid.org/0000-0001-5668-1165>),
@@ -57,4 +57,4 @@ Author: William Michael Landau [aut, cre]
   Eli Lilly and Company [cph]
 Maintainer: William Michael Landau <will.landau@gmail.com>
 Repository: CRAN
-Date/Publication: 2022-08-05 09:50:02 UTC
+Date/Publication: 2022-09-07 15:40:07 UTC
