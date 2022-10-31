@@ -197,12 +197,7 @@ the return value of the target's command is ignored,
 and the data is not saved automatically.
 As with dynamic files (\code{format = "file"}) it is the
 responsibility of the user to write to
-\code{\link[targets:tar_path]{tar_path()}} from inside the target.
-An example target
-could look something like
-tar_target(x,
-{saveRDS("value", tar_path(create_dir = TRUE)); "ignored"},
-storage = "none")`.
+the data store from inside the target.
 
 The distinguishing feature of \code{storage = "none"}
 (as opposed to \code{format = "file"})
@@ -254,6 +249,37 @@ and a downstream dynamic target that runs \code{command2}.
 \code{command2}, and \code{command2} dynamically maps over
 these arguments in batches.
 }
+\section{Replicate-specific seeds}{
+
+In ordinary pipelines, each target has its own unique deterministic
+pseudo-random number generator seed derived from its target name.
+In batched replicate, however, each batch is a target with multiple
+replicate within that batch. That is why \code{\link[=tar_rep]{tar_rep()}}
+and friends give each \emph{replicate} its own unique seed.
+Each replicate-specific seed is created
+based on the dynamic parent target name,
+\code{tar_option_get("seed")} (for \code{targets} version 0.13.5.9000 and above),
+batch index, and rep-within-batch index.
+The seed is set just before the replicate runs.
+Replicate-specific seeds are invariant to batching structure.
+In other words,
+\code{tar_rep(name = x, command = rnorm(1), batches = 100, reps = 1, ...)}
+produces the same numerical output as
+\code{tar_rep(name = x, command = rnorm(1), batches = 10, reps = 10, ...)}
+(but with different batch names).
+Other target factories with this seed scheme are \code{\link[=tar_rep2]{tar_rep2()}},
+\code{\link[=tar_map_rep]{tar_map_rep()}}, \code{\link[=tar_map2_count]{tar_map2_count()}}, \code{\link[=tar_map2_size]{tar_map2_size()}},
+and \code{\link[=tar_render_rep]{tar_render_rep()}}.
+For the \verb{tar_map2_*()} functions,
+it is possible to manually supply your own seeds
+through the \code{command1} argument and then invoke them in your
+custom code for \code{command2} (\code{set.seed()}, \code{withr::with_seed},
+or \code{withr::local_seed()}). For \code{\link[=tar_render_rep]{tar_render_rep()}},
+custom seeds can be supplied to the \code{params} argument
+and then invoked in the individual R Markdown reports.
+Likewise with \code{\link[=tar_quarto_rep]{tar_quarto_rep()}} and the \code{execute_params} argument.
+}
+
 \section{Target objects}{
 
 Most \code{tarchetypes} functions are target factories,
