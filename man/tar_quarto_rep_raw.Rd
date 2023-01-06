@@ -16,6 +16,7 @@ tar_quarto_rep_raw(
   debug = FALSE,
   quiet = TRUE,
   pandoc_args = NULL,
+  rep_workers = 1,
   packages = targets::tar_option_get("packages"),
   library = targets::tar_option_get("library"),
   format = targets::tar_option_get("format"),
@@ -91,6 +92,13 @@ respectively for Rmd and Jupyter input files).}
 \item{quiet}{Suppress warning and other messages.}
 
 \item{pandoc_args}{Additional command line options to pass to pandoc.}
+
+\item{rep_workers}{Positive integer of length 1, number of local R
+processes to use to run reps within batches in parallel. If 1,
+then reps are run sequentially within each batch. If greater than 1,
+then reps within batch are run in parallel using workers
+created with \code{future::plan(future.callr::callr, workers = rep_workers)}
+and invoked with \code{furrr::future_map()}.}
 
 \item{packages}{Character vector of packages to load right before
 the target builds or the output data is reloaded for
@@ -271,16 +279,6 @@ or \code{withr::local_seed()}). For \code{\link[=tar_render_rep]{tar_render_rep(
 custom seeds can be supplied to the \code{params} argument
 and then invoked in the individual R Markdown reports.
 Likewise with \code{\link[=tar_quarto_rep]{tar_quarto_rep()}} and the \code{execute_params} argument.
-}
-
-\section{Nested futures for batched replication}{
-
-Batched replication functions like \code{\link[=tar_rep]{tar_rep()}} support nested futures
-for parallelism within batches. For example, if your \code{future} plan
-(see \url{https://books.ropensci.org/targets/hpc.html#future}) is
-\code{future::plan(list(future.batchtools::batchtools_slurm, future::multicore))}, # nolint
-then the SLURM plan will parallelize the batches and the multicore plan
-will parallelize the reps within each batch.
 }
 
 \section{Quarto troubleshooting}{

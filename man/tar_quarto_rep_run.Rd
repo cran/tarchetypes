@@ -10,7 +10,8 @@ tar_quarto_rep_run(
   execute_params,
   extra_files,
   deps,
-  default_output_file
+  default_output_file,
+  rep_workers
 )
 }
 \arguments{
@@ -33,6 +34,13 @@ report, automatically created by \code{tar_quarto_rep()}.}
 \item{default_output_file}{Output file path determined by the
 YAML front-matter of the Quarto source document.
 Automatic output file names are based on this file.}
+
+\item{rep_workers}{Positive integer of length 1, number of local R
+processes to use to run reps within batches in parallel. If 1,
+then reps are run sequentially within each batch. If greater than 1,
+then reps within batch are run in parallel using workers
+created with \code{future::plan(future.callr::callr, workers = rep_workers)}
+and invoked with \code{furrr::future_map()}.}
 }
 \value{
 Character vector with the path to the Quarto

@@ -11,7 +11,7 @@
 #'   See the "Target objects" section for background.
 #' @inheritSection tar_map Target objects
 #' @inheritSection tar_rep Replicate-specific seeds
-#' @inheritSection tar_rep Nested futures for batched replication
+#' @inheritParams tar_rep
 #' @param name Character of length 1, base name of the targets.
 #' @param command1 Language object to create named arguments to `command2`.
 #'   Must return a data frame with one row per call to `command2`.
@@ -48,6 +48,7 @@ tar_map2_raw <- function(
   columns2 = quote(tidyselect::everything()),
   suffix1 = "1",
   suffix2 = "2",
+  rep_workers = 1,
   tidy_eval = targets::tar_option_get("tidy_eval"),
   packages = targets::tar_option_get("packages"),
   library = targets::tar_option_get("library"),
@@ -88,6 +89,8 @@ tar_map2_raw <- function(
   targets::tar_assert_scalar(combine)
   targets::tar_assert_lgl(combine)
   targets::tar_assert_lang(group)
+  tar_assert_rep_workers(rep_workers)
+  rep_workers <- as.integer(rep_workers)
   envir <- targets::tar_option_get("envir")
   command1 <- tar_raw_command(name, command1)
   command2 <- tar_raw_command(name, command2)
@@ -122,7 +125,12 @@ tar_map2_raw <- function(
   )
   target_downstream <- targets::tar_target_raw(
     name = name_downstream,
-    command = tar_map2_command_downstream(command2, sym_upstream, columns2),
+    command = tar_map2_command_downstream(
+      command = command2,
+      sym_upstream = sym_upstream,
+      columns2 = columns2,
+      rep_workers = rep_workers
+    ),
     pattern = rlang::call2("map", sym_upstream),
     packages = packages,
     library = library,
@@ -185,12 +193,18 @@ tar_map2_command_upstream <- function(command, group) {
   )
 }
 
-tar_map2_command_downstream <- function(command, sym_upstream, columns2) {
+tar_map2_command_downstream <- function(
+  command,
+  sym_upstream,
+  columns2,
+  rep_workers
+) {
   rlang::call2(
     "tar_map2_run",
     command = command,
     values = sym_upstream,
     columns = columns2,
+    rep_workers = rep_workers,
     .ns = "tarchetypes"
   )
 }
@@ -223,34 +237,97 @@ tar_map2_group <- function(data, group) {
 #'   this function directly.
 #' @return A data frame with a `tar_group` column attached (if `group`
 #'   is not `NULL`).
+#' @inheritParams tar_rep
 #' @param command Command to run.
 #' @param values Data frame of named arguments produced by `command1`
 #'   that `command2` dynamically maps over. Different from the `values`
 #'   argument of `tar_map2()`.
 #' @param columns tidyselect expression to select columns of `values`
 #'   to append to the result.
-tar_map2_run <- function(command, values, columns) {
+tar_map2_run <- function(command, values, columns, rep_workers) {
   command <- substitute(command)
   columns <- substitute(columns)
+  columns <- targets::tar_tidyselect_eval(columns, colnames(values))
   splits <- split(values, f = seq_len(nrow(values)))
-  out <- furrr::future_map(
-    .x = seq_along(splits),
-    .f = ~tar_map2_run_rep(
-      rep = .x,
-      command = command,
-      splits = splits,
-      columns = columns,
-      reps = length(splits)
-    ),
-    .options = furrr::furrr_options(seed = TRUE)
+  pedigree <- targets::tar_definition()$pedigree
+  name <- pedigree$parent
+  batch <- pedigree$index
+  reps <- length(splits)
+  seeds <- produce_batch_seeds(name = name, batch = batch, reps = reps)
+  envir <- targets::tar_envir()
+  call <- quote(
+    function(.x, .y, command, batch, seeds, columns, envir) {
+      tarchetypes::tar_map2_run_rep(
+        rep = .x,
+        values = .y,
+        command = command,
+        batch = batch,
+        seeds = seeds,
+        columns = columns,
+        envir = envir
+      )
+    }
   )
+  fun <- eval(call, envir = targets::tar_option_get("envir"))
+  if (rep_workers > 1L) {
+    plan_old <- future::plan()
+    on.exit(future::plan(plan_old, .cleanup = FALSE))
+    future::plan(future.callr::callr, workers = rep_workers, .cleanup = FALSE)
+    out <- furrr::future_map2(
+      .x = seq_along(splits),
+      .y = splits,
+      .f = fun,
+      .options = furrr::furrr_options(
+        seed = 1L,
+        packages = targets::tar_definition()$command$packages,
+        globals = names(targets::tar_option_get("envir"))
+      ),
+      command = as.expression(command),
+      batch = batch,
+      seeds = seeds,
+      columns = columns,
+      envir = envir
+    )
+  } else {
+    out <- map2(
+      x = seq_along(splits),
+      y = splits,
+      f = fun,
+      command = as.expression(command),
+      batch = batch,
+      seeds = seeds,
+      columns = columns,
+      envir = envir
+    )
+  }
   do.call(vctrs::vec_rbind, out)
 }
 
-tar_map2_run_rep <- function(rep, command, splits, columns, reps) {
-  envir <- targets::tar_envir()
-  values <- splits[[rep]]
+#' @title Run a rep in a `tar_map2()`-powered function.
+#' @export
+#' @keywords internal
+#' @description Not a user-side function. Do not invoke directly.
+#' @return The result of running `expr`.
+#' @param rep Rep number.
+#' @param values Data frame of mapped-over values.
+#' @param command R command to run.
+#' @param batch Batch number.
+#' @param seeds Random number generator seeds of the batch.
+#' @param columns Expression for appending static columns.
+#' @param envir Environment of the target.
+#' @examples
+#' # See the examples of tar_map2_count().
+tar_map2_run_rep <- function(
+  rep,
+  values,
+  command,
+  batch,
+  seeds,
+  columns,
+  envir
+) {
   names <- names(values)
+  seed <- as.integer(if_any(anyNA(seeds), NA_integer_, seeds[rep]))
   lapply(
     X = seq_len(ncol(values)),
     FUN = function(index) {
@@ -266,19 +343,14 @@ tar_map2_run_rep <- function(rep, command, splits, columns, reps) {
       )
     }
   )
-  pedigree <- targets::tar_definition()$pedigree
-  name <- pedigree$parent
-  batch <- pedigree$index
-  seed <- produce_seed_rep(name = name, batch = batch, rep = rep, reps = reps)
   out <- if_any(
     anyNA(seed),
-    eval(command, envir = targets::tar_envir()),
+    eval(command, envir = envir),
     withr::with_seed(
       seed = seed,
-      code = eval(command, envir = targets::tar_envir())
+      code = eval(command, envir = envir)
     )
   )
-  columns <- targets::tar_tidyselect_eval(columns, colnames(values))
   out <- tar_append_static_values(out, values[, columns])
   out[["tar_batch"]] <- as.integer(batch)
   out[["tar_rep"]] <- as.integer(rep)

@@ -13,6 +13,7 @@ tar_map_rep_raw(
   columns = quote(tidyselect::everything()),
   batches = 1,
   reps = 1,
+  rep_workers = 1,
   combine = TRUE,
   tidy_eval = targets::tar_option_get("tidy_eval"),
   packages = targets::tar_option_get("packages"),
@@ -77,13 +78,19 @@ branches created during \code{tar_make()}.}
 \item{reps}{Number of replications in each batch. The total number
 of replications is \code{batches * reps}.}
 
+\item{rep_workers}{Positive integer of length 1, number of local R
+processes to use to run reps within batches in parallel. If 1,
+then reps are run sequentially within each batch. If greater than 1,
+then reps within batch are run in parallel using workers
+created with \code{future::plan(future.callr::callr, workers = rep_workers)}
+and invoked with \code{furrr::future_map()}.}
+
 \item{combine}{Logical of length 1, whether to statically combine
 all the results into a single target downstream.}
 
-\item{tidy_eval}{Logical, whether to enable tidy evaluation
-when interpreting \code{command} and \code{pattern}. If \code{TRUE}, you can use the
-"bang-bang" operator \verb{!!} to programmatically insert
-the values of global objects.}
+\item{tidy_eval}{Whether to invoke tidy evaluation
+(e.g. the \verb{!!} operator from \code{rlang}) as soon as the target is defined
+(before \code{tar_make()}). Applies to the \code{command} argument.}
 
 \item{packages}{Character vector of packages to load right before
 the target builds or the output data is reloaded for

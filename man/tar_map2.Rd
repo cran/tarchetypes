@@ -16,6 +16,7 @@ tar_map2(
   suffix2 = "2",
   columns1 = tidyselect::everything(),
   columns2 = tidyselect::everything(),
+  rep_workers = 1,
   tidy_eval = targets::tar_option_get("tidy_eval"),
   packages = targets::tar_option_get("packages"),
   library = targets::tar_option_get("library"),
@@ -82,10 +83,16 @@ output to append to \code{command2} output.
 Columns already in the target output are not appended.
 \code{columns1} takes precedence over \code{columns2}.}
 
-\item{tidy_eval}{Logical, whether to enable tidy evaluation
-when interpreting \code{command} and \code{pattern}. If \code{TRUE}, you can use the
-"bang-bang" operator \verb{!!} to programmatically insert
-the values of global objects.}
+\item{rep_workers}{Positive integer of length 1, number of local R
+processes to use to run reps within batches in parallel. If 1,
+then reps are run sequentially within each batch. If greater than 1,
+then reps within batch are run in parallel using workers
+created with \code{future::plan(future.callr::callr, workers = rep_workers)}
+and invoked with \code{furrr::future_map()}.}
+
+\item{tidy_eval}{Whether to invoke tidy evaluation
+(e.g. the \verb{!!} operator from \code{rlang}) as soon as the target is defined
+(before \code{tar_make()}). Applies to the \code{command} argument.}
 
 \item{packages}{Character vector of packages to load right before
 the target builds or the output data is reloaded for
@@ -95,11 +102,11 @@ globally for all subsequent targets you define.}
 \item{library}{Character vector of library paths to try
 when loading \code{packages}.}
 
-\item{format}{Character of length 1, storage format of the output.
-An efficient data frame format like \code{"feather"} is recommended,
-but the default is \code{"rds"} to avoid incurring extra package
-dependencies. See the help file of \code{targets::tar_target()}
-for details on storage formats.}
+\item{format}{Optional storage format for the target's return value.
+With the exception of \code{format = "file"}, each target
+gets a file in \verb{_targets/objects}, and each format is a different
+way to save and load this file. See the "Storage formats" section
+for a detailed list of possible data storage formats.}
 
 \item{repository}{Character of length 1, remote repository for target
 storage. Choices:
@@ -278,16 +285,6 @@ or \code{withr::local_seed()}). For \code{\link[=tar_render_rep]{tar_render_rep(
 custom seeds can be supplied to the \code{params} argument
 and then invoked in the individual R Markdown reports.
 Likewise with \code{\link[=tar_quarto_rep]{tar_quarto_rep()}} and the \code{execute_params} argument.
-}
-
-\section{Nested futures for batched replication}{
-
-Batched replication functions like \code{\link[=tar_rep]{tar_rep()}} support nested futures
-for parallelism within batches. For example, if your \code{future} plan
-(see \url{https://books.ropensci.org/targets/hpc.html#future}) is
-\code{future::plan(list(future.batchtools::batchtools_slurm, future::multicore))}, # nolint
-then the SLURM plan will parallelize the batches and the multicore plan
-will parallelize the reps within each batch.
 }
 
 \section{Target objects}{

@@ -10,9 +10,11 @@
 #' @importFrom dplyr bind_rows mutate select
 #' @importFrom fs dir_create is_dir path_ext path_ext_remove
 #'   path_ext_set path_rel
-#' @importFrom furrr future_map furrr_options
+#' @importFrom furrr future_map future_map2 furrr_options
 #' @importFrom rlang as_function call2 check_installed enquo expr
 #'   inform is_missing quo_squash
+#' @importFrom future plan
+#' @importFrom future.callr callr
 #' @importFrom targets tar_assert_chr tar_assert_dbl tar_assert_df
 #'   tar_assert_envir tar_assert_equal_lengths
 #'   tar_assert_expr tar_assert_flag
@@ -28,9 +30,10 @@
 #'   tar_assert_true tar_assert_unique tar_assert_unique_targets
 #'   tar_cue tar_definition tar_deparse_language tar_deparse_safe
 #'   tar_dir tar_envir tar_exist_meta tar_group tar_load tar_meta
-#'   tar_option_get tar_option_set tar_read tar_runtime_object
-#'   tar_script tar_target tar_target_raw tar_test tar_tidy_eval
-#'   tar_throw_validate tar_warn_deprecate tar_warn_validate
+#'   tar_option_get tar_option_set tar_path_target tar_read
+#'   tar_runtime_object tar_script tar_target tar_target_raw
+#'   tar_test tar_tidy_eval tar_throw_validate tar_warn_deprecate
+#'   tar_warn_validate
 #' @importFrom tibble as_tibble
 #' @importFrom tidyselect all_of any_of contains ends_with everything
 #'   last_col matches num_range one_of starts_with

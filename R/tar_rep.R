@@ -22,13 +22,6 @@
 #'   are aggregated with `list()`. If `"vector"`,
 #'   then `vctrs::vec_c()`. If `"group"`, then `vctrs::vec_rbind()`.
 #' @inheritSection tar_map Target objects
-#' @section Nested futures for batched replication:
-#'   Batched replication functions like [tar_rep()] support nested futures
-#'   for parallelism within batches. For example, if your `future` plan
-#'   (see <https://books.ropensci.org/targets/hpc.html#future>) is
-#'   `future::plan(list(future.batchtools::batchtools_slurm, future::multicore))`, # nolint
-#'   then the SLURM plan will parallelize the batches and the multicore plan
-#'   will parallelize the reps within each batch.
 #' @section Replicate-specific seeds:
 #'   In ordinary pipelines, each target has its own unique deterministic
 #'   pseudo-random number generator seed derived from its target name.
@@ -81,6 +74,12 @@
 #'   branches created during `tar_make()`.
 #' @param reps Number of replications in each batch. The total number
 #'   of replications is `batches * reps`.
+#' @param rep_workers Positive integer of length 1, number of local R
+#'   processes to use to run reps within batches in parallel. If 1,
+#'   then reps are run sequentially within each batch. If greater than 1,
+#'   then reps within batch are run in parallel using workers
+#'   created with `future::plan(future.callr::callr, workers = rep_workers)`
+#'   and invoked with `furrr::future_map()`.
 #' @param tidy_eval Whether to invoke tidy evaluation
 #'   (e.g. the `!!` operator from `rlang`) as soon as the target is defined
 #'   (before `tar_make()`). Applies to the `command` argument.
@@ -123,6 +122,7 @@ tar_rep <- function(
   command,
   batches = 1,
   reps = 1,
+  rep_workers = 1,
   tidy_eval = targets::tar_option_get("tidy_eval"),
   packages = targets::tar_option_get("packages"),
   library = targets::tar_option_get("library"),
@@ -147,6 +147,7 @@ tar_rep <- function(
     command = command,
     batches = batches,
     reps = reps,
+    rep_workers = rep_workers,
     packages = packages,
     library = library,
     format = format,

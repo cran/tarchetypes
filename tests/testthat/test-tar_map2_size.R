@@ -23,7 +23,8 @@ targets::tar_test("tar_map2_size()", {
       names = arg1,
       suffix1 = "i",
       suffix2 = "ii",
-      size = 2
+      size = 2,
+      rep_workers = 2
     )
   })
   # manifest
@@ -135,7 +136,8 @@ targets::tar_test("tar_map2_size() works with one-row output", {
       names = arg1,
       suffix1 = "i",
       suffix2 = "ii",
-      size = 3
+      size = 3,
+      rep_workers = 1
     )
   })
   tar_make(callr_function = NULL)

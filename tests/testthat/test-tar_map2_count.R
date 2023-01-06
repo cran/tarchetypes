@@ -23,7 +23,8 @@ targets::tar_test("tar_map2_count()", {
       names = arg1,
       suffix1 = "i",
       suffix2 = "ii",
-      batches = 3
+      batches = 3,
+      rep_workers = 2
     )
   })
   # manifest
@@ -135,7 +136,8 @@ targets::tar_test("tar_map2_count() works with one-row output", {
       names = arg1,
       suffix1 = "i",
       suffix2 = "ii",
-      batches = 3
+      batches = 3,
+      rep_workers = 1
     )
   })
   tar_make(callr_function = NULL)

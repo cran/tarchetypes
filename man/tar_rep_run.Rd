@@ -4,7 +4,7 @@
 \alias{tar_rep_run}
 \title{Run a batch in a \code{tar_rep()} archetype.}
 \usage{
-tar_rep_run(command, batch, reps, iteration)
+tar_rep_run(command, batch, reps, iteration, rep_workers)
 }
 \arguments{
 \item{command}{Expression object, command to replicate.}
@@ -14,6 +14,13 @@ tar_rep_run(command, batch, reps, iteration)
 \item{reps}{Numeric of length 1, number of reps per batch.}
 
 \item{iteration}{Character, iteration method.}
+
+\item{rep_workers}{Positive integer of length 1, number of local R
+processes to use to run reps within batches in parallel. If 1,
+then reps are run sequentially within each batch. If greater than 1,
+then reps within batch are run in parallel using workers
+created with \code{future::plan(future.callr::callr, workers = rep_workers)}
+and invoked with \code{furrr::future_map()}.}
 }
 \value{
 Aggregated results of multiple executions of the

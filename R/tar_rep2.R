@@ -11,6 +11,7 @@
 #' @inheritSection tar_map Target objects
 #' @inheritSection tar_rep Replicate-specific seeds
 #' @inheritParams targets::tar_target
+#' @inheritParams tar_rep
 #' @param ... Symbols to name one or more upstream batched targets
 #'   created by [tar_rep()].
 #'   If you supply more than one such target, all those targets must have the
@@ -50,6 +51,7 @@ tar_rep2 <- function(
   name,
   command,
   ...,
+  rep_workers = 1,
   tidy_eval = targets::tar_option_get("tidy_eval"),
   packages = targets::tar_option_get("packages"),
   library = targets::tar_option_get("library"),
@@ -74,6 +76,7 @@ tar_rep2 <- function(
     name = name,
     command = command,
     targets = targets,
+    rep_workers = rep_workers,
     packages = packages,
     library = library,
     format = format,

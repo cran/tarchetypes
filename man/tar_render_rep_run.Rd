@@ -5,7 +5,7 @@
 \title{Render a batch of parameterized R Markdown reports
 inside a \code{tar_render_rep()} target.}
 \usage{
-tar_render_rep_run(path, params, args, deps)
+tar_render_rep_run(path, params, args, deps, rep_workers)
 }
 \arguments{
 \item{path}{Path to the R Markdown source file.}
@@ -14,6 +14,13 @@ tar_render_rep_run(path, params, args, deps)
 
 \item{deps}{An unnamed list of target dependencies of the R Markdown
 report, automatically created by \code{tar_render_rep()}.}
+
+\item{rep_workers}{Positive integer of length 1, number of local R
+processes to use to run reps within batches in parallel. If 1,
+then reps are run sequentially within each batch. If greater than 1,
+then reps within batch are run in parallel using workers
+created with \code{future::plan(future.callr::callr, workers = rep_workers)}
+and invoked with \code{furrr::future_map()}.}
 }
 \value{
 Character vector with the path to the R Markdown

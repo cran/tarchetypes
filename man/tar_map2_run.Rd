@@ -4,7 +4,7 @@
 \alias{tar_map2_run}
 \title{Run a dynamic batch of a \code{tar_map2()} target.}
 \usage{
-tar_map2_run(command, values, columns)
+tar_map2_run(command, values, columns, rep_workers)
 }
 \arguments{
 \item{command}{Command to run.}
@@ -15,6 +15,13 @@ argument of \code{tar_map2()}.}
 
 \item{columns}{tidyselect expression to select columns of \code{values}
 to append to the result.}
+
+\item{rep_workers}{Positive integer of length 1, number of local R
+processes to use to run reps within batches in parallel. If 1,
+then reps are run sequentially within each batch. If greater than 1,
+then reps within batch are run in parallel using workers
+created with \code{future::plan(future.callr::callr, workers = rep_workers)}
+and invoked with \code{furrr::future_map()}.}
 }
 \value{
 A data frame with a \code{tar_group} column attached (if \code{group}
