@@ -11,7 +11,10 @@ tar_copy_target <- function(target) {
     pattern = target$settings$pattern,
     packages = target$command$packages,
     library = target$command$library,
+    deps = target$command$deps,
+    string = target$command$string,
     format = target$settings$format,
+    repository = target$settings$repository,
     iteration = target$settings$iteration,
     error = target$settings$error,
     memory = target$settings$memory,
@@ -32,13 +35,14 @@ tar_copy_target <- function(target) {
   )
 }
 
-tar_replace_command <- function(target, expr) {
+tar_replace_command <- function(target, expr, set_deps) {
   pilot <- targets::tar_target_raw(
     name = target$settings$name,
     command = expr,
     packages = target$command$packages,
     library = target$command$library,
-    pattern = target$settings$pattern
+    pattern = target$settings$pattern,
+    deps = if_any(set_deps, NULL, target$command$deps)
   )
   target$command <- pilot$command
   invisible()
