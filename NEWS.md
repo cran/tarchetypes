@@ -1,3 +1,7 @@
+# tarchetypes 0.7.7
+
+* Allow `format = "file_fast"` in target factories.
+
 # tarchetypes 0.7.6
 
 * Support Quarto profiles through the `QUARTO_PROFILE` environment variable (#139, @andrewheiss).
