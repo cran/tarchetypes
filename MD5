@@ -1,7 +1,7 @@
-da278d4289d7e9220dc5accbb0257b6a *DESCRIPTION
+2e45f77989b82b269674e4f183aa116d *DESCRIPTION
 fe2d2df764c64759ba16b27d74c536bc *LICENSE
-f620fb6f08b4ac956db53fd89658aebc *NAMESPACE
-1da1bac05f637f7c2e5067012364d201 *NEWS.md
+89a6e02081b8d01eea79e7c9eb112c09 *NAMESPACE
+9f8daf6f02a0fa254412cfb4ec9cfe0e *NEWS.md
 72b93a8d242b04ca253f8ed9f4823c5a *R/class_counter.R
 44cdd8b33ab18f3a1fba28415e5e324c *R/tar_age.R
 bcc4a635c8f06a33fda37bb43a066de0 *R/tar_change.R
@@ -33,7 +33,7 @@ f524655b72151c4458c2ca7fe1be12fc *R/tar_knit.R
 320fe5ea181b9dfb11a9f5418b2a9784 *R/tar_knitr_deps.R
 d9a81733abb72e9809f0a50afcb51661 *R/tar_knitr_deps_expr.R
 520b27bdaa02bdddf568016858388cbd *R/tar_map.R
-662052eea472d83ac1d032529a9040b5 *R/tar_map2.R
+ed77e57f25ea95f336178b722e1a5e35 *R/tar_map2.R
 68ffdfc171929196daf8ee0be7360cff *R/tar_map2_count.R
 195abcfd10a6321b6384f1987d0c0d91 *R/tar_map2_count_raw.R
 e1e363b252140e8765c387a265fb85ca *R/tar_map2_raw.R
@@ -45,13 +45,13 @@ cbdfcea3aca251e4305597e842093cb0 *R/tar_package.R
 2e06d3167abfbd93697dc36ab21e6d43 *R/tar_plan.R
 9deb8f8794cfae5b748e36ac9734040d *R/tar_quarto.R
 0ad05cb7e3174cdc3e453eacba4a00e5 *R/tar_quarto_files.R
-0b70b21a179af42fbc844ab5e2e11975 *R/tar_quarto_raw.R
+8faac9775e59d2b8d9034bf5a72b9058 *R/tar_quarto_raw.R
 5ac5ce6dbe3a835c44cb3a8efcdc5d1a *R/tar_quarto_rep.R
-0d6f3e8310e469f05c4f924476dc5758 *R/tar_quarto_rep_raw.R
+32ad964cd6f3b4f4d340b2397a45d25d *R/tar_quarto_rep_raw.R
 490514d98b3e8dc9912f473b1cdc788b *R/tar_render.R
 f6949eaea937a1d938e75527004673b5 *R/tar_render_raw.R
 90d1fb2171a52ef84757da979c8d47f0 *R/tar_render_rep.R
-244048d76056b487ce20e86bd9013004 *R/tar_render_rep_raw.R
+0f1b600e79fd8fd5ee0ebe72978e618e *R/tar_render_rep_raw.R
 2d26cf1a65ba2c2dff6af1b53cd0b029 *R/tar_rep.R
 4097cba9be47341baac75d1ef11596ae *R/tar_rep2.R
 640ac3d2987ed6c569a64d3f43d5b532 *R/tar_rep2_raw.R
@@ -190,7 +190,7 @@ f48cb003e90135792376c5e831437f2e *tests/testthat/test-tar_eval.R
 0734c768d5e08c9e380d4e8fcf106687 *tests/testthat/test-tar_group_count.R
 69c3ffd8d7effcf18f68aca964f76cc8 *tests/testthat/test-tar_group_select.R
 41a31d8bb411e4308f43d17455a2d3df *tests/testthat/test-tar_group_size.R
-5d1c25a62f36bef65ea43a4b85fbdd04 *tests/testthat/test-tar_hook_before.R
+d9242e1f329fcd70dc8aa7a31060eeef *tests/testthat/test-tar_hook_before.R
 c0a964f1dee404a34ad89dbeaba5d1ef *tests/testthat/test-tar_hook_inner.R
 42d36ceece3092dc22b8fd2b9b823bd6 *tests/testthat/test-tar_hook_outer.R
 63d87b262e519efd56ea1805be070d7b *tests/testthat/test-tar_knit.R
@@ -198,7 +198,7 @@ c0a964f1dee404a34ad89dbeaba5d1ef *tests/testthat/test-tar_hook_inner.R
 bf591ba56d8333f411247788ea30d8ef *tests/testthat/test-tar_knitr_deps.R
 9181aa76358e8e7b5688508cfe46f9b8 *tests/testthat/test-tar_knitr_deps_expr.R
 20123c4046d9d4519761e3c0ba6e79e2 *tests/testthat/test-tar_map.R
-86acd537790a95f1b29ce66e194be59a *tests/testthat/test-tar_map2.R
+4008973ca76428b397c477b05710608e *tests/testthat/test-tar_map2.R
 2a9f01948ca10cd3a1f5f159674c1532 *tests/testthat/test-tar_map2_count.R
 d25ff98919a913a107fdc750cfab4bae *tests/testthat/test-tar_map2_size.R
 381c1bb7a0788522cf9440d3226741a5 *tests/testthat/test-tar_map_rep.R
