@@ -199,8 +199,6 @@ tar_quarto_rep_raw <- function(
       rep_workers = rep_workers
     ),
     pattern = substitute(map(x), env = list(x = sym_params)),
-    packages = packages,
-    library = library,
     format = "file",
     repository = "local",
     iteration = iteration,
@@ -447,21 +445,20 @@ tar_quarto_rep_run <- function(
   reps <- length(execute_params)
   seeds <- produce_batch_seeds(name = name, batch = batch, reps = reps)
   if (rep_workers > 1L) {
-    plan_old <- future::plan()
-    on.exit(future::plan(plan_old, .cleanup = FALSE))
-    future::plan(future.callr::callr, workers = rep_workers, .cleanup = FALSE)
-    out <- furrr::future_map2(
+    cluster <- make_psock_cluster(rep_workers)
+    on.exit(parallel::stopCluster(cl = cluster))
+    out <- parallel::clusterMap(
+      cl = cluster,
+      fun = fun,
       .x = seq_along(execute_params),
       .y = execute_params,
-      .f = fun,
-      .options = furrr::furrr_options(
-        seed = 1L,
-        packages = targets::tar_definition()$command$packages,
-        globals = names(targets::tar_option_get("envir"))
+      MoreArgs = list(
+        args = args,
+        default_output_file = default_output_file,
+        seeds = seeds
       ),
-      args = args,
-      default_output_file = default_output_file,
-      seeds = seeds
+      SIMPLIFY = FALSE,
+      USE.NAMES = FALSE
     )
   } else {
     out <- map2(
