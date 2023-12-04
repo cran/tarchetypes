@@ -1,3 +1,8 @@
+# tarchetypes 0.7.10
+
+* Prepare to use `tar_seed_create()` and `tar_seed_set()` (https://github.com/ropensci/targets/issues/1139). Future versions of `tarchetypes` should use these package functions, but this version cannot because of the compatibility constraints of the release cycle.
+* Migrate tests to `targets` >= 1.3.2.9004 progress statuses ("completed" instead of "built", "dispatched" instead of "started").
+
 # tarchetypes 0.7.9
 
 * Deprecate the `packages` and `library` arguments of `tar_quarto()` and `tar_quarto_raw()` (#155, @svraka).
