@@ -42,8 +42,8 @@ running the same pipeline should get the same results,
 and no two targets in the same pipeline share the same seed.
 (Even dynamic branches have different names and thus different seeds.)
 You can recover the seed of a completed target
-with \code{tar_meta(your_target, seed)} and run \code{set.seed()} on the result
-to locally recreate the target's initial RNG state.}
+with \code{tar_meta(your_target, seed)} and run \code{\link[targets:tar_seed_set]{tar_seed_set()}}
+on the result to locally recreate the target's initial RNG state.}
 
 \item{path}{Character of length 1,
 either the single \verb{*.qmd} source file to be rendered
@@ -129,12 +129,12 @@ just before the target runs.}
 
 \item{deployment}{Character of length 1, only relevant to
 \code{\link[targets:tar_make_clustermq]{tar_make_clustermq()}} and \code{\link[targets:tar_make_future]{tar_make_future()}}. If \code{"worker"},
-the target builds on a parallel worker. If \code{"main"},
-the target builds on the host machine / process managing the pipeline.}
+the target runs on a parallel worker. If \code{"main"},
+the target runs on the host machine / process managing the pipeline.}
 
 \item{priority}{Numeric of length 1 between 0 and 1. Controls which
 targets get deployed first when multiple competing targets are ready
-simultaneously. Targets with priorities closer to 1 get built earlier
+simultaneously. Targets with priorities closer to 1 get dispatched earlier
 (and polled earlier in \code{\link[targets:tar_make_future]{tar_make_future()}}).}
 
 \item{resources}{Object returned by \code{tar_resources()}
@@ -148,7 +148,7 @@ See \code{tar_resources()} for details.}
 Must be one of the following values:
 \itemize{
 \item \code{"main"}: the target's dependencies are loaded on the host machine
-and sent to the worker before the target builds.
+and sent to the worker before the target runs.
 \item \code{"worker"}: the worker loads the targets dependencies.
 \item \code{"none"}: the dependencies are not loaded at all.
 This choice is almost never recommended. It is only for
@@ -199,6 +199,21 @@ explains target factories (functions like this one which generate targets)
 and the design specification at
 \url{https://books.ropensci.org/targets-design/}
 details the structure and composition of target objects.
+}
+
+\section{Literate programming limitations}{
+
+Literate programming files are messy and variable,
+so functions like \code{\link[=tar_render]{tar_render()}} have limitations:
+* Child documents are not tracked for changes.
+* Upstream target dependencies are not detected if \code{\link[=tar_read]{tar_read()}}
+and/or \code{\link[=tar_load]{tar_load()}} are called from a user-defined function.
+In addition, single target names must be mentioned and they must
+be symbols. \code{tar_load("x")} and \code{tar_load(contains("x"))} may not
+detect target \code{x}.
+* Special/optional input/output files may not be detected in all cases.
+* \code{\link[=tar_render]{tar_render()}} and friends are for local files only. They do not
+integrate with the cloud storage capabilities of \code{targets}.
 }
 
 \section{Quarto troubleshooting}{

@@ -42,6 +42,7 @@
 #'   See the "Target objects" section for background.
 #' @inheritSection tar_map Target objects
 #' @inheritSection tar_rep Replicate-specific seeds
+#' @inheritSection tar_render Literate programming limitations
 #' @inheritParams targets::tar_target
 #' @inheritParams rmarkdown::render
 #' @inheritParams tar_rep
@@ -337,7 +338,7 @@ tar_render_rep_rep <- function(rep, params, args, path, seeds) {
   args$params[["tar_group"]] <- NULL
   args$intermediates_dir <- fs::dir_create(tempfile())
   seed <- as.integer(if_any(anyNA(seeds), NA_integer_, seeds[rep]))
-  if_any(anyNA(seed), NULL, tar_seed_set(seed = seed))
+  if_any(anyNA(seed), NULL, targets::tar_seed_set(seed = seed))
   output <- do.call(rmarkdown::render, args)
   tar_render_paths(output, path)
 }

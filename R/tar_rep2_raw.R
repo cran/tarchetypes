@@ -106,7 +106,6 @@ tar_rep2_raw <- function(
 
 tar_rep2_command <- function(command, targets, iteration, rep_workers) {
   batches <- lapply(targets, as.symbol)
-  names(batches) <- targets
   substitute(
     tarchetypes::tar_rep2_run(
       command = command,
@@ -134,6 +133,9 @@ tar_rep2_command <- function(command, targets, iteration, rep_workers) {
 #' @param iteration Iteration method: `"list"`, `"vector"`, or `"group"`.
 tar_rep2_run <- function(command, batches, iteration, rep_workers) {
   command <- substitute(command)
+  expr_batches <- substitute(batches)
+  names <- map_chr(as.list(expr_batches), targets::tar_deparse_safe)[-1L]
+  names(batches) <- names
   assert_batches(batches)
   reps <- batch_count_reps(batches[[1]])
   pedigree <- targets::tar_definition()$pedigree
@@ -201,7 +203,7 @@ tar_rep2_run <- function(command, batches, iteration, rep_workers) {
 #' # See the examples of tar_rep2().
 tar_rep2_run_rep <- function(rep, slice, command, batch, seeds, envir) {
   seed <- as.integer(if_any(anyNA(seeds), NA_integer_, seeds[rep]))
-  if_any(anyNA(seed), NULL, tar_seed_set(seed = seed))
+  if_any(anyNA(seed), NULL, targets::tar_seed_set(seed = seed))
   out <- eval(command, envir = slice, enclos = envir)
   out$tar_batch <- as.integer(batch)
   out$tar_rep <- as.integer(rep)

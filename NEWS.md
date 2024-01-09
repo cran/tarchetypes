@@ -1,3 +1,9 @@
+# tarchetypes 0.7.11
+
+* Use `tar_seed_create()` and `tar_seed_set()` from `targets`.
+* Document limitations of literate programming target factories like `tar_render()` (#158).
+* Make `tar_rep2()` compatible with `tar_map()` (#165).
+
 # tarchetypes 0.7.10
 
 * Prepare to use `tar_seed_create()` and `tar_seed_set()` (https://github.com/ropensci/targets/issues/1139). Future versions of `tarchetypes` should use these package functions, but this version cannot because of the compatibility constraints of the release cycle.
