@@ -182,10 +182,13 @@ and the latter conserves local storage.}
 \item{garbage_collection}{Logical, whether to run \code{base::gc()}
 just before the target runs.}
 
-\item{deployment}{Character of length 1, only relevant to
-\code{\link[targets:tar_make_clustermq]{tar_make_clustermq()}} and \code{\link[targets:tar_make_future]{tar_make_future()}}. If \code{"worker"},
-the target runs on a parallel worker. If \code{"main"},
-the target runs on the host machine / process managing the pipeline.}
+\item{deployment}{Character of length 1. If \code{deployment} is
+\code{"main"}, then the target will run on the central controlling R process.
+Otherwise, if \code{deployment} is \code{"worker"} and you set up the pipeline
+with distributed/parallel computing, then
+the target runs on a parallel worker. For more on distributed/parallel
+computing in \code{targets}, please visit
+\url{https://books.ropensci.org/targets/crew.html}.}
 
 \item{priority}{Numeric of length 1 between 0 and 1. Controls which
 targets get deployed first when multiple competing targets are ready
@@ -345,21 +348,21 @@ targets::tar_read(x)
 }
 \seealso{
 Other branching: 
-\code{\link{tar_combine_raw}()},
 \code{\link{tar_combine}()},
-\code{\link{tar_map2_count_raw}()},
+\code{\link{tar_combine_raw}()},
+\code{\link{tar_map}()},
+\code{\link{tar_map2}()},
 \code{\link{tar_map2_count}()},
+\code{\link{tar_map2_count_raw}()},
 \code{\link{tar_map2_raw}()},
 \code{\link{tar_map2_size}()},
-\code{\link{tar_map2}()},
-\code{\link{tar_map_rep_raw}()},
 \code{\link{tar_map_rep}()},
-\code{\link{tar_map}()},
-\code{\link{tar_rep2_raw}()},
+\code{\link{tar_map_rep_raw}()},
+\code{\link{tar_rep}()},
 \code{\link{tar_rep2}()},
-\code{\link{tar_rep_map_raw}()},
+\code{\link{tar_rep2_raw}()},
 \code{\link{tar_rep_map}()},
-\code{\link{tar_rep_raw}()},
-\code{\link{tar_rep}()}
+\code{\link{tar_rep_map_raw}()},
+\code{\link{tar_rep_raw}()}
 }
 \concept{branching}

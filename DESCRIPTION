@@ -9,7 +9,7 @@ Description: Function-oriented Make-like declarative pipelines for
   reproducible pipelines concisely and compactly.
   The methods in this package were influenced by the 'drake' R package
   by Will Landau (2018) <doi:10.21105/joss.00550>.
-Version: 0.7.11
+Version: 0.7.12
 License: MIT + file LICENSE
 URL: https://docs.ropensci.org/tarchetypes/,
         https://github.com/ropensci/tarchetypes
@@ -48,9 +48,9 @@ Suggests: curl (>= 4.3), knitr (>= 1.28), quarto (>= 1.0), rmarkdown
 Encoding: UTF-8
 Language: en-US
 Config/testthat/edition: 3
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 NeedsCompilation: no
-Packaged: 2024-01-08 16:39:20 UTC; C240390
+Packaged: 2024-02-06 19:46:47 UTC; C240390
 Author: William Michael Landau [aut, cre]
     (<https://orcid.org/0000-0003-1878-3253>),
   Samantha Oliver [rev] (<https://orcid.org/0000-0001-5668-1165>),
@@ -58,4 +58,4 @@ Author: William Michael Landau [aut, cre]
   Eli Lilly and Company [cph]
 Maintainer: William Michael Landau <will.landau.oss@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-01-09 09:30:12 UTC
+Date/Publication: 2024-02-06 20:30:02 UTC

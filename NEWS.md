@@ -1,3 +1,7 @@
+# tarchetypes 0.7.12 (development)
+
+* Adjust tests because group iteration is now explicitly prohibited for dynamic targets.
+
 # tarchetypes 0.7.11
 
 * Use `tar_seed_create()` and `tar_seed_set()` from `targets`.
