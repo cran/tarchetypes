@@ -7,6 +7,7 @@
 tar_render_rep_raw(
   name,
   path,
+  working_directory = NULL,
   params = expression(NULL),
   batches = NULL,
   rep_workers = 1,
@@ -22,6 +23,7 @@ tar_render_rep_raw(
   resources = targets::tar_option_get("resources"),
   retrieval = targets::tar_option_get("retrieval"),
   cue = targets::tar_option_get("cue"),
+  description = targets::tar_option_get("description"),
   quiet = TRUE,
   args = list()
 )
@@ -45,6 +47,17 @@ on the result to locally recreate the target's initial RNG state.}
 
 \item{path}{Character string, file path to the R Markdown source file.
 Must have length 1.}
+
+\item{working_directory}{Optional character string,
+path to the working directory
+to temporarily set when running the report.
+The default is \code{NULL}, which runs the report from the
+current working directory at the time the pipeline is run.
+This default is recommended in the vast majority of cases.
+To use anything other than \code{NULL}, you must manually set the value
+of the \code{store} argument relative to the working directory in all calls
+to \code{tar_read()} and \code{tar_load()} in the report. Otherwise,
+these functions will not know where to find the data.}
 
 \item{params}{Expression object with code to generate
 a data frame or \code{tibble} with one row per rendered report
@@ -151,6 +164,15 @@ explicitly from another language.
 
 \item{cue}{An optional object from \code{tar_cue()} to customize the
 rules that decide whether the target is up to date.}
+
+\item{description}{Character of length 1, a custom free-form human-readable
+text description of the target. Descriptions appear as target labels
+in functions like \code{\link[targets:tar_manifest]{tar_manifest()}} and \code{\link[targets:tar_visnetwork]{tar_visnetwork()}},
+and they let you select subsets of targets for the \code{names} argument of
+functions like \code{\link[targets:tar_make]{tar_make()}}. For example,
+\code{tar_manifest(names = tar_described_as(starts_with("survival model")))}
+lists all the targets whose descriptions start with the character
+string \code{"survival model"}.}
 
 \item{quiet}{An option to suppress printing during rendering from knitr,
 pandoc command line and others. To only suppress printing of the last

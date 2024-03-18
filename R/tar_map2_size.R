@@ -48,6 +48,7 @@ tar_map2_size <- function(
   command2,
   values = NULL,
   names = NULL,
+  descriptions = tidyselect::everything(),
   size = Inf,
   combine = TRUE,
   suffix1 = "1",
@@ -68,7 +69,8 @@ tar_map2_size <- function(
   resources = targets::tar_option_get("resources"),
   storage = targets::tar_option_get("storage"),
   retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue")
+  cue = targets::tar_option_get("cue"),
+  description = targets::tar_option_get("description")
 ) {
   tar_map2_size_raw(
     name = deparse(substitute(name)),
@@ -76,6 +78,7 @@ tar_map2_size <- function(
     command2 = substitute(command2),
     values = values,
     names = substitute(names),
+    descriptions = substitute(descriptions),
     size = size,
     combine = combine,
     suffix1 = suffix1,
@@ -96,6 +99,7 @@ tar_map2_size <- function(
     resources = resources,
     storage = storage,
     retrieval = retrieval,
-    cue = cue
+    cue = cue,
+    description = description
   )
 }

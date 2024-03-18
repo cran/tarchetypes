@@ -71,6 +71,7 @@ tar_map_rep_raw <- function(
   command,
   values = NULL,
   names = NULL,
+  descriptions = quote(tidyselect::everything()),
   columns = quote(tidyselect::everything()),
   batches = 1,
   reps = 1,
@@ -89,7 +90,8 @@ tar_map_rep_raw <- function(
   resources = targets::tar_option_get("resources"),
   storage = targets::tar_option_get("storage"),
   retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue")
+  cue = targets::tar_option_get("cue"),
+  description = targets::tar_option_get("description")
 ) {
   targets::tar_assert_scalar(name)
   targets::tar_assert_chr(name)
@@ -101,6 +103,9 @@ tar_map_rep_raw <- function(
   }
   if (!is.null(names)) {
     targets::tar_assert_lang(names)
+  }
+  if (!is.null(descriptions)) {
+    targets::tar_assert_lang(descriptions)
   }
   if (!is.null(columns)) {
     targets::tar_assert_lang(columns)
@@ -126,6 +131,7 @@ tar_map_rep_raw <- function(
     command = substitute(seq_len(batches), env = list(batches = batches)),
     packages = character(0),
     format = "rds",
+    repository = repository,
     iteration = "vector",
     error = error,
     memory = memory,
@@ -134,7 +140,8 @@ tar_map_rep_raw <- function(
     priority = priority,
     storage = "main",
     retrieval = "main",
-    cue = cue
+    cue = cue,
+    description = description
   )
   command_dynamic <- tar_rep_command_target(
     command = command,
@@ -160,14 +167,20 @@ tar_map_rep_raw <- function(
     resources = resources,
     storage = storage,
     retrieval = retrieval,
-    cue = cue
+    cue = cue,
+    description = description
   )
   target_static <- if_any(
     is.null(values),
     target_dynamic,
     do.call(
       tar_map,
-      args = list(target_dynamic, values = values, names = names)
+      args = list(
+        target_dynamic,
+        values = values,
+        names = names,
+        descriptions = descriptions
+      )
     )
   )
   target_combine <- if_any(
@@ -187,7 +200,8 @@ tar_map_rep_raw <- function(
       garbage_collection = garbage_collection,
       deployment = "main",
       priority = priority,
-      cue = cue
+      cue = cue,
+      description = description
     )
   )
   unlist(list(target_batch, target_static, target_combine), recursive = TRUE)

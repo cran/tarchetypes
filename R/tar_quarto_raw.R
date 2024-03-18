@@ -23,6 +23,7 @@
 #' @inheritSection tar_quarto Quarto troubleshooting
 #' @inheritParams targets::tar_target_raw
 #' @inheritParams quarto::quarto_render
+#' @inheritParams tar_render
 #' @param path Character of length 1,
 #'   either the single `*.qmd` source file to be rendered
 #'   or a directory containing a Quarto project.
@@ -108,6 +109,7 @@
 tar_quarto_raw <- function(
   name,
   path = ".",
+  working_directory = NULL,
   extra_files = character(0),
   execute = TRUE,
   execute_params = NULL,
@@ -115,6 +117,7 @@ tar_quarto_raw <- function(
   cache_refresh = FALSE,
   debug = FALSE,
   quiet = TRUE,
+  quarto_args = NULL,
   pandoc_args = NULL,
   profile = NULL,
   packages = NULL,
@@ -126,7 +129,8 @@ tar_quarto_raw <- function(
   priority = targets::tar_option_get("priority"),
   resources = targets::tar_option_get("resources"),
   retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue")
+  cue = targets::tar_option_get("cue"),
+  description = targets::tar_option_get("description")
 ) {
   assert_quarto()
   targets::tar_assert_scalar(name)
@@ -134,10 +138,10 @@ tar_quarto_raw <- function(
   targets::tar_assert_nzchar(name)
   targets::tar_assert_chr(extra_files)
   targets::tar_assert_nzchar(extra_files)
-  targets::tar_assert_scalar(path)
-  targets::tar_assert_chr(path)
-  targets::tar_assert_nzchar(path)
-  targets::tar_assert_path(path)
+  targets::tar_assert_file(path)
+  if (!is.null(working_directory)) {
+    targets::tar_assert_file(working_directory)
+  }
   targets::tar_assert_scalar(execute)
   targets::tar_assert_lgl(execute)
   targets::tar_assert_lang(execute_params %|||% quote(x))
@@ -150,6 +154,7 @@ tar_quarto_raw <- function(
   targets::tar_assert_lgl(debug)
   targets::tar_assert_scalar(quiet)
   targets::tar_assert_lgl(quiet)
+  targets::tar_assert_chr(quarto_args %|||% ".")
   targets::tar_assert_chr(pandoc_args %|||% ".")
   targets::tar_assert_scalar(profile %|||% ".")
   targets::tar_assert_chr(profile %|||% ".")
@@ -167,6 +172,7 @@ tar_quarto_raw <- function(
   }
   command <- tar_quarto_command(
     path = path,
+    working_directory = working_directory,
     sources = sources,
     output = output,
     input = input,
@@ -176,6 +182,7 @@ tar_quarto_raw <- function(
     cache_refresh = cache_refresh,
     debug = debug,
     quiet = quiet,
+    quarto_args = quarto_args,
     pandoc_args = pandoc_args,
     profile = profile
   )
@@ -191,12 +198,14 @@ tar_quarto_raw <- function(
     priority = priority,
     resources = resources,
     retrieval = retrieval,
-    cue = cue
+    cue = cue,
+    description = description
   )
 }
 
 tar_quarto_command <- function(
   path,
+  working_directory,
   sources,
   output,
   input,
@@ -206,6 +215,7 @@ tar_quarto_command <- function(
   cache_refresh,
   debug,
   quiet,
+  quarto_args,
   pandoc_args,
   profile
 ) {
@@ -214,7 +224,7 @@ tar_quarto_command <- function(
       input = path,
       execute = execute,
       execute_params = execute_params,
-      execute_dir = quote(getwd()),
+      execute_dir = execute_dir,
       execute_daemon = 0,
       execute_daemon_restart = FALSE,
       execute_debug = FALSE,
@@ -222,17 +232,20 @@ tar_quarto_command <- function(
       cache_refresh = cache_refresh,
       debug = debug,
       quiet = quiet,
+      quarto_args = quarto_args,
       pandoc_args = pandoc_args,
       as_job = FALSE
     ),
     env = list(
       path = path,
       execute = execute,
+      execute_dir = working_directory %|||% quote(getwd()),
       execute_params = execute_params,
       cache = cache,
       cache_refresh = cache_refresh,
       debug = debug,
       quiet = quiet,
+      quarto_args = quarto_args,
       pandoc_args = pandoc_args
     )
   )

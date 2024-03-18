@@ -7,6 +7,7 @@
 tar_quarto_raw(
   name,
   path = ".",
+  working_directory = NULL,
   extra_files = character(0),
   execute = TRUE,
   execute_params = NULL,
@@ -14,6 +15,7 @@ tar_quarto_raw(
   cache_refresh = FALSE,
   debug = FALSE,
   quiet = TRUE,
+  quarto_args = NULL,
   pandoc_args = NULL,
   profile = NULL,
   packages = NULL,
@@ -25,7 +27,8 @@ tar_quarto_raw(
   priority = targets::tar_option_get("priority"),
   resources = targets::tar_option_get("resources"),
   retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue")
+  cue = targets::tar_option_get("cue"),
+  description = targets::tar_option_get("description")
 )
 }
 \arguments{
@@ -50,6 +53,17 @@ either the single \verb{*.qmd} source file to be rendered
 or a directory containing a Quarto project.
 Defaults to the working directory of the \code{targets} pipeline.
 Passed directly to the \code{input} argument of \code{quarto::quarto_render()}.}
+
+\item{working_directory}{Optional character string,
+path to the working directory
+to temporarily set when running the report.
+The default is \code{NULL}, which runs the report from the
+current working directory at the time the pipeline is run.
+This default is recommended in the vast majority of cases.
+To use anything other than \code{NULL}, you must manually set the value
+of the \code{store} argument relative to the working directory in all calls
+to \code{tar_read()} and \code{tar_load()} in the report. Otherwise,
+these functions will not know where to find the data.}
 
 \item{extra_files}{Character vector of extra files and
 directories to track for changes. The target will be invalidated
@@ -77,6 +91,10 @@ respectively for Rmd and Jupyter input files).}
 \item{debug}{Leave intermediate files in place after render.}
 
 \item{quiet}{Suppress warning and other messages.}
+
+\item{quarto_args}{Character vector of other \code{quarto} CLI flag pass to the
+command. This is mainly for advanced usage, e.g it can be useful for new
+options added to quarto CLI and not yet supported as function argument.}
 
 \item{pandoc_args}{Additional command line options to pass to pandoc.}
 
@@ -161,6 +179,15 @@ explicitly from another language.
 
 \item{cue}{An optional object from \code{tar_cue()} to customize the
 rules that decide whether the target is up to date.}
+
+\item{description}{Character of length 1, a custom free-form human-readable
+text description of the target. Descriptions appear as target labels
+in functions like \code{\link[targets:tar_manifest]{tar_manifest()}} and \code{\link[targets:tar_visnetwork]{tar_visnetwork()}},
+and they let you select subsets of targets for the \code{names} argument of
+functions like \code{\link[targets:tar_make]{tar_make()}}. For example,
+\code{tar_manifest(names = tar_described_as(starts_with("survival model")))}
+lists all the targets whose descriptions start with the character
+string \code{"survival model"}.}
 }
 \value{
 A target object with \code{format = "file"}.

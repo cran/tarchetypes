@@ -49,6 +49,7 @@
 #' @inheritParams quarto::quarto_render
 #' @inheritParams targets::tar_target
 #' @inheritParams tar_quarto_rep_run
+#' @inheritParams tar_render
 #' @param path Character string, file path to the Quarto source file.
 #'   Must have length 1.
 #' @param execute_params Expression object with code to generate
@@ -109,6 +110,7 @@
 tar_quarto_rep_raw <- function(
   name,
   path,
+  working_directory = NULL,
   execute_params = expression(NULL),
   batches = NULL,
   extra_files = character(0),
@@ -117,6 +119,7 @@ tar_quarto_rep_raw <- function(
   cache_refresh = FALSE,
   debug = FALSE,
   quiet = TRUE,
+  quarto_args = NULL,
   pandoc_args = NULL,
   rep_workers = 1,
   packages = targets::tar_option_get("packages"),
@@ -130,17 +133,18 @@ tar_quarto_rep_raw <- function(
   priority = targets::tar_option_get("priority"),
   resources = targets::tar_option_get("resources"),
   retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue")
+  cue = targets::tar_option_get("cue"),
+  description = targets::tar_option_get("description")
 ) {
   assert_quarto()
   targets::tar_assert_scalar(name)
   targets::tar_assert_chr(name)
   targets::tar_assert_nzchar(name)
-  targets::tar_assert_scalar(path)
-  targets::tar_assert_chr(path)
-  targets::tar_assert_nzchar(path)
-  targets::tar_assert_path(path)
   targets::tar_assert_not_dirs(path)
+  targets::tar_assert_file(path)
+  if (!is.null(working_directory)) {
+    targets::tar_assert_file(working_directory)
+  }
   targets::tar_assert_lang(execute_params %|||% quote(x))
   targets::tar_assert_dbl(batches %|||% 0L, "batches must be numeric.")
   targets::tar_assert_scalar(batches %|||% 0L, "batches must have length 1.")
@@ -156,6 +160,7 @@ tar_quarto_rep_raw <- function(
   targets::tar_assert_lgl(debug)
   targets::tar_assert_scalar(quiet)
   targets::tar_assert_lgl(quiet)
+  targets::tar_assert_chr(quarto_args %|||% ".")
   targets::tar_assert_chr(pandoc_args %|||% ".")
   tar_assert_rep_workers(rep_workers)
   rep_workers <- as.integer(rep_workers)
@@ -182,19 +187,22 @@ tar_quarto_rep_raw <- function(
     priority = priority,
     resources = resources,
     retrieval = retrieval,
-    cue = cue
+    cue = cue,
+    description = description
   )
   target <- targets::tar_target_raw(
     name = name,
     command = tar_quarto_rep_command(
       name = name,
       path = path,
+      working_directory = working_directory,
       extra_files = extra_files,
       execute = execute,
       cache = cache,
       cache_refresh = cache_refresh,
       debug = debug,
       quiet = quiet,
+      quarto_args = quarto_args,
       pandoc_args = pandoc_args,
       default_output_file = default_output_file,
       rep_workers = rep_workers
@@ -210,7 +218,8 @@ tar_quarto_rep_raw <- function(
     priority = priority,
     resources = resources,
     retrieval = retrieval,
-    cue = cue
+    cue = cue,
+    description = description
   )
   out <- list(target_params, target)
   names(out) <- c(name_params, name)
@@ -297,12 +306,14 @@ tar_quarto_rep_run_params <- function(
 tar_quarto_rep_command <- function(
   name,
   path,
+  working_directory,
   extra_files,
   execute,
   cache,
   cache_refresh,
   debug,
   quiet,
+  quarto_args,
   pandoc_args,
   default_output_file,
   rep_workers
@@ -311,7 +322,7 @@ tar_quarto_rep_command <- function(
     list(
       input = path,
       execute = execute,
-      execute_dir = quote(getwd()),
+      execute_dir = execute_dir,
       execute_daemon = 0,
       execute_daemon_restart = FALSE,
       execute_debug = FALSE,
@@ -319,16 +330,19 @@ tar_quarto_rep_command <- function(
       cache_refresh = cache_refresh,
       debug = debug,
       quiet = quiet,
+      quarto_args = quarto_args,
       pandoc_args = pandoc_args,
       as_job = FALSE
     ),
     env = list(
       path = path,
       execute = execute,
+      execute_dir = working_directory %|||% quote(getwd()),
       cache = cache,
       cache_refresh = cache_refresh,
       debug = debug,
       quiet = quiet,
+      quarto_args = quarto_args,
       pandoc_args = pandoc_args
     )
   )

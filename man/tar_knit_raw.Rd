@@ -7,6 +7,8 @@
 tar_knit_raw(
   name,
   path,
+  output_file = NULL,
+  working_directory = NULL,
   packages = targets::tar_option_get("packages"),
   library = targets::tar_option_get("library"),
   error = targets::tar_option_get("error"),
@@ -17,6 +19,7 @@ tar_knit_raw(
   resources = targets::tar_option_get("resources"),
   retrieval = targets::tar_option_get("retrieval"),
   cue = targets::tar_option_get("cue"),
+  description = targets::tar_option_get("description"),
   quiet = TRUE,
   knit_arguments = quote(list())
 )
@@ -26,6 +29,19 @@ tar_knit_raw(
 
 \item{path}{Character string, file path to the \code{knitr} source file.
 Must have length 1.}
+
+\item{output_file}{Character string, file path to the rendered output file.}
+
+\item{working_directory}{Optional character string,
+path to the working directory
+to temporarily set when running the report.
+The default is \code{NULL}, which runs the report from the
+current working directory at the time the pipeline is run.
+This default is recommended in the vast majority of cases.
+To use anything other than \code{NULL}, you must manually set the value
+of the \code{store} argument relative to the working directory in all calls
+to \code{tar_read()} and \code{tar_load()} in the report. Otherwise,
+these functions will not know where to find the data.}
 
 \item{packages}{Character vector of packages to load right before
 the target runs or the output data is reloaded for
@@ -106,6 +122,15 @@ explicitly from another language.
 
 \item{cue}{An optional object from \code{tar_cue()} to customize the
 rules that decide whether the target is up to date.}
+
+\item{description}{Character of length 1, a custom free-form human-readable
+text description of the target. Descriptions appear as target labels
+in functions like \code{\link[targets:tar_manifest]{tar_manifest()}} and \code{\link[targets:tar_visnetwork]{tar_visnetwork()}},
+and they let you select subsets of targets for the \code{names} argument of
+functions like \code{\link[targets:tar_make]{tar_make()}}. For example,
+\code{tar_manifest(names = tar_described_as(starts_with("survival model")))}
+lists all the targets whose descriptions start with the character
+string \code{"survival model"}.}
 
 \item{quiet}{Boolean; suppress the progress bar and messages?}
 

@@ -88,6 +88,7 @@
 tar_render_rep <- function(
   name,
   path,
+  working_directory = NULL,
   params = data.frame(),
   batches = NULL,
   rep_workers = 1,
@@ -103,12 +104,14 @@ tar_render_rep <- function(
   resources = targets::tar_option_get("resources"),
   retrieval = targets::tar_option_get("retrieval"),
   cue = targets::tar_option_get("cue"),
+  description = targets::tar_option_get("description"),
   quiet = TRUE,
   ...
 ) {
   tar_render_rep_raw(
     name = targets::tar_deparse_language(substitute(name)),
     path = path,
+    working_directory = working_directory,
     params = substitute(params),
     batches = batches,
     rep_workers = rep_workers,
@@ -124,6 +127,7 @@ tar_render_rep <- function(
     resources = resources,
     retrieval = retrieval,
     cue = cue,
+    description = description,
     args = list(...)
   )
 }

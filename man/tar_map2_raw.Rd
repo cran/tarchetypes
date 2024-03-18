@@ -10,6 +10,7 @@ tar_map2_raw(
   command2,
   values = NULL,
   names = NULL,
+  descriptions = quote(tidyselect::everything()),
   group = quote(rep(1L, nrow(as.data.frame(!!.x)))),
   combine = TRUE,
   columns1 = quote(tidyselect::everything()),
@@ -30,7 +31,8 @@ tar_map2_raw(
   resources = targets::tar_option_get("resources"),
   storage = targets::tar_option_get("storage"),
   retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue")
+  cue = targets::tar_option_get("cue"),
+  description = targets::tar_option_get("description")
 )
 }
 \arguments{
@@ -58,6 +60,11 @@ you define \code{values}, as shown at
 to select which columns of \code{values} to use to construct
 statically branched target names. If \code{NULL}, then
 short names are automatically generated.}
+
+\item{descriptions}{Names of a column in \code{values}
+to append to the custom description of each generated target.
+The value of \code{descriptions} should be a \code{tidyselect} expression
+such as a call to \code{\link[=any_of]{any_of()}} or \code{\link[=starts_with]{starts_with()}}.}
 
 \item{group}{Function on the data produced by \code{command1} to create the
 \code{tar_group} column that determines the batching structure for the
@@ -230,6 +237,15 @@ explicitly from another language.
 
 \item{cue}{An optional object from \code{tar_cue()} to customize the
 rules that decide whether the target is up to date.}
+
+\item{description}{Character of length 1, a custom free-form human-readable
+text description of the target. Descriptions appear as target labels
+in functions like \code{\link[targets:tar_manifest]{tar_manifest()}} and \code{\link[targets:tar_visnetwork]{tar_visnetwork()}},
+and they let you select subsets of targets for the \code{names} argument of
+functions like \code{\link[targets:tar_make]{tar_make()}}. For example,
+\code{tar_manifest(names = tar_described_as(starts_with("survival model")))}
+lists all the targets whose descriptions start with the character
+string \code{"survival model"}.}
 }
 \value{
 A list of new target objects.

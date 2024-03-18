@@ -117,6 +117,7 @@
 tar_quarto <- function(
   name,
   path = ".",
+  working_directory = NULL,
   extra_files = character(0),
   execute = TRUE,
   execute_params = list(),
@@ -124,6 +125,7 @@ tar_quarto <- function(
   cache_refresh = FALSE,
   debug = FALSE,
   quiet = TRUE,
+  quarto_args = NULL,
   pandoc_args = NULL,
   profile = NULL,
   tidy_eval = targets::tar_option_get("tidy_eval"),
@@ -136,7 +138,8 @@ tar_quarto <- function(
   priority = targets::tar_option_get("priority"),
   resources = targets::tar_option_get("resources"),
   retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue")
+  cue = targets::tar_option_get("cue"),
+  description = targets::tar_option_get("description")
 ) {
   name <- targets::tar_deparse_language(substitute(name))
   execute_params <- targets::tar_tidy_eval(
@@ -147,6 +150,7 @@ tar_quarto <- function(
   tar_quarto_raw(
     name = name,
     path = path,
+    working_directory = working_directory,
     extra_files = extra_files,
     execute = execute,
     execute_params = execute_params,
@@ -154,6 +158,7 @@ tar_quarto <- function(
     cache_refresh = cache_refresh,
     debug = debug,
     quiet = quiet,
+    quarto_args = quarto_args,
     pandoc_args = pandoc_args,
     profile = profile,
     packages = packages,
@@ -165,6 +170,7 @@ tar_quarto <- function(
     priority = priority,
     resources = resources,
     retrieval = retrieval,
-    cue = cue
+    cue = cue,
+    description = description
   )
 }
