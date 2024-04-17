@@ -1,3 +1,9 @@
+# tarchetypes 0.9.0
+
+## Invalidating changes
+
+* To align with https://github.com/ropensci/targets/issues/1244 and https://github.com/ropensci/targets/pull/1262, switch the hashing functions from `digest::digest()` to `secretbase::siphash13()`.
+
 # tarchetypes 0.8.0
 
 * Expose the new `description` argument of `tar_target()` in `targets` 1.5.1.9001.
