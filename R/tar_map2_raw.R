@@ -1,41 +1,6 @@
-#' @title Batched dynamic-within-static branching for data frames (raw version).
+#' @rdname tar_map2
+#' @export
 #' @keywords internal
-#' @family branching
-#' @description Define targets for batched
-#'   dynamic-within-static branching for data frames (raw version).
-#'   Not a user-side function. Do not invoke directly.
-#' @details Like `tar_map2()` except `name` is a character string
-#'   and `command1`, `command2`, `group`, `names`, `columns1`, and `columns2`
-#'   are language objects.
-#' @return A list of new target objects.
-#'   See the "Target objects" section for background.
-#' @inheritSection tar_map Target objects
-#' @inheritSection tar_rep Replicate-specific seeds
-#' @inheritParams tar_rep
-#' @param name Character of length 1, base name of the targets.
-#' @param command1 Language object to create named arguments to `command2`.
-#'   Must return a data frame with one row per call to `command2`.
-#' @param command2 Language object  to map over the data frame of arguments
-#'   produced by `command1`. Must return a data frame.
-#' @param columns1 Language object, a tidyselect expression
-#'   to select which columns of `values`
-#'   to append to the output of all targets.
-#' @param group Function on the data produced by `command1` to create the
-#'   `tar_group` column that determines the batching structure for the
-#'   `command2` targets.
-#' @param columns2 Language object, a tidyselect expression
-#'   to select which columns of `command1`
-#'   output to append to `command2` output.
-#'   In case of conflicts, `column1` takes precedence.
-#' @param suffix1 Character of length 1,
-#'   suffix to apply to the `command1` targets to distinguish
-#'   them from the `command2` targets.
-#' @param suffix2 Character of length 1,
-#'   suffix to apply to the `command2` targets to distinguish
-#'   them from the `command1` targets.
-#' @inheritParams tar_map_rep_raw
-#' @inheritParams tar_rep2
-#' @inheritParams tar_map
 tar_map2_raw <- function(
   name,
   command1,
@@ -50,6 +15,7 @@ tar_map2_raw <- function(
   suffix1 = "1",
   suffix2 = "2",
   rep_workers = 1,
+  delimiter = "_",
   tidy_eval = targets::tar_option_get("tidy_eval"),
   packages = targets::tar_option_get("packages"),
   library = targets::tar_option_get("library"),
@@ -95,6 +61,8 @@ tar_map2_raw <- function(
   targets::tar_assert_lgl(combine)
   targets::tar_assert_lang(group)
   tar_assert_rep_workers(rep_workers)
+  targets::tar_assert_chr(delimiter)
+  targets::tar_assert_scalar(delimiter)
   rep_workers <- as.integer(rep_workers)
   envir <- targets::tar_option_get("envir")
   command1 <- tar_raw_command(name, command1)
@@ -106,8 +74,8 @@ tar_map2_raw <- function(
     command1 <- tar_command_append_static_values(command1, columns1)
     command2 <- tar_command_append_static_values(command2, columns1)
   }
-  name_upstream <- paste(name, suffix1, sep = "_")
-  name_downstream <- paste(name, suffix2, sep = "_")
+  name_upstream <- paste(name, suffix1, sep = delimiter)
+  name_downstream <- paste(name, suffix2, sep = delimiter)
   sym_upstream <- as.symbol(name_upstream)
   sym_downstream <- as.symbol(name_downstream)
   target_upstream <- targets::tar_target_raw(
@@ -165,7 +133,8 @@ tar_map2_raw <- function(
         values = values,
         names = names,
         descriptions = descriptions,
-        unlist = FALSE
+        unlist = FALSE,
+        delimiter = delimiter
       )
     )
   )

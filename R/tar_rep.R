@@ -3,6 +3,12 @@
 #'   of heavily dynamically-branched workflows:
 #'   <https://books.ropensci.org/targets/dynamic.html#batching>.
 #'   [tar_rep()] replicates a command in strategically sized batches.
+#'
+#'   [tar_rep()] expects unevaluated `name` and `command` arguments
+#'   (e.g. `tar_rep(name = sim, command = simulate())`)
+#'   whereas [tar_rep_raw()] expects an evaluated string for `name`
+#'   and an evaluated expression object for `command`
+#'   (e.g. `tar_rep_raw(name = "sim", command = quote(simulate()))`).
 #' @export
 #' @family branching
 #' @details `tar_rep()` and `tar_rep_raw()` each create two targets:
@@ -56,9 +62,9 @@
 #'   to run the command multiple times.
 #'   If the command returns a list or data frame, then
 #'   the targets from `tar_rep()` will try to append new elements/columns
-#'   `tar_batch` and `tar_rep` to the output
-#'   to denote the batch and rep-within-batch IDs, respectively.
-#'   See the "Target objects" section for background.
+#'   `tar_batch`, `tar_rep`, and `tar_seed` to the output
+#'   to denote the batch, rep-within-batch ID, and random number
+#'   generator seed, respectively.
 #'
 #'   `tar_read(your_target)` (on the downstream target with the actual work)
 #'   will return a list of lists, where the outer list has one element per
@@ -66,10 +72,22 @@
 #'   To un-batch this nested list, call
 #'   `tar_read(your_target, recursive = FALSE)`.
 #' @inheritParams targets::tar_target
+#' @param name Name of the target.
+#'   [tar_rep()] expects unevaluated `name` and `command` arguments
+#'   (e.g. `tar_rep(name = sim, command = simulate())`)
+#'   whereas [tar_rep_raw()] expects an evaluated string for `name`
+#'   and an evaluated expression object for `command`
+#'   (e.g. `tar_rep_raw(name = "sim", command = quote(simulate()))`).
 #' @param command R code to run multiple times. Must return a list or
 #'   data frame because `tar_rep()` will try to append new elements/columns
 #'   `tar_batch` and `tar_rep` to the output to denote the batch
 #'   and rep-within-batch IDs, respectively.
+#'
+#'   [tar_rep()] expects unevaluated `name` and `command` arguments
+#'   (e.g. `tar_rep(name = sim, command = simulate())`)
+#'   whereas [tar_rep_raw()] expects an evaluated string for `name`
+#'   and an evaluated expression object for `command`
+#'   (e.g. `tar_rep_raw(name = "sim", command = quote(simulate()))`).
 #' @param batches Number of batches. This is also the number of dynamic
 #'   branches created during `tar_make()`.
 #' @param reps Number of replications in each batch. The total number
@@ -96,7 +114,7 @@
 #'     frame with a special `tar_group` column of consecutive integers
 #'     from 1 through the number of groups. Each integer designates a group,
 #'     and a branch is created for each collection of rows in a group.
-#'     See the [tar_group()] function to see how you can
+#'     See the `tar_group()` function in `targets` to see how you can
 #'     create the special `tar_group` column with `dplyr::group_by()`.
 #' @examples
 #' if (identical(Sys.getenv("TAR_LONG_EXAMPLES"), "true")) {
@@ -106,6 +124,18 @@
 #'     tarchetypes::tar_rep(
 #'       x,
 #'       data.frame(x = sample.int(1e4, 2)),
+#'       batches = 2,
+#'       reps = 3
+#'     )
+#'   )
+#' })
+#' targets::tar_make()
+#' targets::tar_read(x)
+#' targets::tar_script({
+#'   list(
+#'     tarchetypes::tar_rep_raw(
+#'       "x",
+#'       quote(data.frame(x = sample.int(1e4, 2))),
 #'       batches = 2,
 #'       reps = 3
 #'     )

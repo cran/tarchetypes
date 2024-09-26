@@ -10,8 +10,8 @@
 #'   path_ext_set path_rel
 #' @importFrom parallel clusterCall clusterMap makePSOCKcluster parLapply
 #'   stopCluster
-#' @importFrom rlang as_function call2 check_installed enquo expr
-#'   inform is_missing quo_squash
+#' @importFrom rlang as_function as_quosure call2 check_installed enquo expr
+#'   inform is_call is_missing quo_squash
 #' @importFrom secretbase siphash13
 #' @importFrom targets tar_assert_chr tar_assert_dbl tar_assert_df
 #'   tar_assert_envir tar_assert_equal_lengths
@@ -27,7 +27,7 @@
 #'   tar_assert_scalar tar_assert_target tar_assert_target_list
 #'   tar_assert_true tar_assert_unique tar_assert_unique_targets
 #'   tar_cue tar_definition tar_deparse_language tar_deparse_safe
-#'   tar_dir tar_envir tar_exist_meta tar_group tar_load tar_meta
+#'   tar_dir tar_envir tar_exist_meta tar_format tar_group tar_load tar_meta
 #'   tar_option_get tar_option_set tar_path_target tar_read
 #'   tar_runtime_object tar_script tar_seed_create tar_seed_set
 #'   tar_target tar_target_raw tar_test tar_tidy_eval

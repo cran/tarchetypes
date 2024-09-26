@@ -9,7 +9,8 @@ tar_map(
   ...,
   names = tidyselect::everything(),
   descriptions = tidyselect::everything(),
-  unlist = FALSE
+  unlist = FALSE,
+  delimiter = "_"
 )
 }
 \arguments{
@@ -43,6 +44,9 @@ If \code{unlist = FALSE}, the list is nested and sub-lists
 are named and grouped by the original input targets.
 If \code{unlist = TRUE}, the return value is a flat list of targets
 named by the new target names.}
+
+\item{delimiter}{Character of length 1, string to insert between
+other strings when creating names of targets.}
 }
 \value{
 A list of new target objects. If \code{unlist} is \code{FALSE},
@@ -95,22 +99,7 @@ targets::tar_manifest()
 }
 }
 \seealso{
-Other branching: 
-\code{\link{tar_combine}()},
-\code{\link{tar_combine_raw}()},
-\code{\link{tar_map2}()},
-\code{\link{tar_map2_count}()},
-\code{\link{tar_map2_count_raw}()},
-\code{\link{tar_map2_raw}()},
-\code{\link{tar_map2_size}()},
-\code{\link{tar_map2_size_raw}()},
-\code{\link{tar_map_rep}()},
-\code{\link{tar_map_rep_raw}()},
-\code{\link{tar_rep}()},
-\code{\link{tar_rep2}()},
-\code{\link{tar_rep2_raw}()},
-\code{\link{tar_rep_map}()},
-\code{\link{tar_rep_map_raw}()},
-\code{\link{tar_rep_raw}()}
+Other static branching: 
+\code{\link{tar_combine}()}
 }
-\concept{branching}
+\concept{static branching}

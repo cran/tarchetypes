@@ -9,22 +9,13 @@
 \alias{tar_qs}
 \alias{tar_keras}
 \alias{tar_torch}
-\alias{tar_format_feather}
+\alias{tar_arrow_feather}
 \alias{tar_parquet}
 \alias{tar_fst}
 \alias{tar_fst_dt}
 \alias{tar_fst_tbl}
-\alias{tar_aws_file}
-\alias{tar_aws_rds}
-\alias{tar_aws_qs}
-\alias{tar_aws_keras}
-\alias{tar_aws_torch}
-\alias{tar_format_aws_feather}
-\alias{tar_aws_parquet}
-\alias{tar_aws_fst}
-\alias{tar_aws_fst_dt}
-\alias{tar_aws_fst_tbl}
-\title{Target formats}
+\alias{tar_nanoparquet}
+\title{Target factories for storage formats}
 \usage{
 tar_url(
   name,
@@ -173,7 +164,7 @@ tar_torch(
   description = targets::tar_option_get("description")
 )
 
-tar_format_feather(
+tar_arrow_feather(
   name,
   command,
   pattern = NULL,
@@ -278,7 +269,7 @@ tar_fst_tbl(
   description = targets::tar_option_get("description")
 )
 
-tar_aws_file(
+tar_nanoparquet(
   name,
   command,
   pattern = NULL,
@@ -296,201 +287,19 @@ tar_aws_file(
   storage = targets::tar_option_get("storage"),
   retrieval = targets::tar_option_get("retrieval"),
   cue = targets::tar_option_get("cue"),
-  description = targets::tar_option_get("description")
-)
-
-tar_aws_rds(
-  name,
-  command,
-  pattern = NULL,
-  tidy_eval = targets::tar_option_get("tidy_eval"),
-  packages = targets::tar_option_get("packages"),
-  library = targets::tar_option_get("library"),
-  repository = targets::tar_option_get("repository"),
-  iteration = targets::tar_option_get("iteration"),
-  error = targets::tar_option_get("error"),
-  memory = targets::tar_option_get("memory"),
-  garbage_collection = targets::tar_option_get("garbage_collection"),
-  deployment = targets::tar_option_get("deployment"),
-  priority = targets::tar_option_get("priority"),
-  resources = targets::tar_option_get("resources"),
-  storage = targets::tar_option_get("storage"),
-  retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue"),
-  description = targets::tar_option_get("description")
-)
-
-tar_aws_qs(
-  name,
-  command,
-  pattern = NULL,
-  tidy_eval = targets::tar_option_get("tidy_eval"),
-  packages = targets::tar_option_get("packages"),
-  library = targets::tar_option_get("library"),
-  repository = targets::tar_option_get("repository"),
-  iteration = targets::tar_option_get("iteration"),
-  error = targets::tar_option_get("error"),
-  memory = targets::tar_option_get("memory"),
-  garbage_collection = targets::tar_option_get("garbage_collection"),
-  deployment = targets::tar_option_get("deployment"),
-  priority = targets::tar_option_get("priority"),
-  resources = targets::tar_option_get("resources"),
-  storage = targets::tar_option_get("storage"),
-  retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue"),
-  description = targets::tar_option_get("description")
-)
-
-tar_aws_keras(
-  name,
-  command,
-  pattern = NULL,
-  tidy_eval = targets::tar_option_get("tidy_eval"),
-  packages = targets::tar_option_get("packages"),
-  library = targets::tar_option_get("library"),
-  repository = targets::tar_option_get("repository"),
-  iteration = targets::tar_option_get("iteration"),
-  error = targets::tar_option_get("error"),
-  memory = targets::tar_option_get("memory"),
-  garbage_collection = targets::tar_option_get("garbage_collection"),
-  deployment = targets::tar_option_get("deployment"),
-  priority = targets::tar_option_get("priority"),
-  resources = targets::tar_option_get("resources"),
-  storage = targets::tar_option_get("storage"),
-  retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue"),
-  description = targets::tar_option_get("description")
-)
-
-tar_aws_torch(
-  name,
-  command,
-  pattern = NULL,
-  tidy_eval = targets::tar_option_get("tidy_eval"),
-  packages = targets::tar_option_get("packages"),
-  library = targets::tar_option_get("library"),
-  repository = targets::tar_option_get("repository"),
-  iteration = targets::tar_option_get("iteration"),
-  error = targets::tar_option_get("error"),
-  memory = targets::tar_option_get("memory"),
-  garbage_collection = targets::tar_option_get("garbage_collection"),
-  deployment = targets::tar_option_get("deployment"),
-  priority = targets::tar_option_get("priority"),
-  resources = targets::tar_option_get("resources"),
-  storage = targets::tar_option_get("storage"),
-  retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue"),
-  description = targets::tar_option_get("description")
-)
-
-tar_format_aws_feather(
-  name,
-  command,
-  pattern = NULL,
-  tidy_eval = targets::tar_option_get("tidy_eval"),
-  packages = targets::tar_option_get("packages"),
-  library = targets::tar_option_get("library"),
-  repository = targets::tar_option_get("repository"),
-  iteration = targets::tar_option_get("iteration"),
-  error = targets::tar_option_get("error"),
-  memory = targets::tar_option_get("memory"),
-  garbage_collection = targets::tar_option_get("garbage_collection"),
-  deployment = targets::tar_option_get("deployment"),
-  priority = targets::tar_option_get("priority"),
-  resources = targets::tar_option_get("resources"),
-  storage = targets::tar_option_get("storage"),
-  retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue"),
-  description = targets::tar_option_get("description")
-)
-
-tar_aws_parquet(
-  name,
-  command,
-  pattern = NULL,
-  tidy_eval = targets::tar_option_get("tidy_eval"),
-  packages = targets::tar_option_get("packages"),
-  library = targets::tar_option_get("library"),
-  repository = targets::tar_option_get("repository"),
-  iteration = targets::tar_option_get("iteration"),
-  error = targets::tar_option_get("error"),
-  memory = targets::tar_option_get("memory"),
-  garbage_collection = targets::tar_option_get("garbage_collection"),
-  deployment = targets::tar_option_get("deployment"),
-  priority = targets::tar_option_get("priority"),
-  resources = targets::tar_option_get("resources"),
-  storage = targets::tar_option_get("storage"),
-  retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue"),
-  description = targets::tar_option_get("description")
-)
-
-tar_aws_fst(
-  name,
-  command,
-  pattern = NULL,
-  tidy_eval = targets::tar_option_get("tidy_eval"),
-  packages = targets::tar_option_get("packages"),
-  library = targets::tar_option_get("library"),
-  repository = targets::tar_option_get("repository"),
-  iteration = targets::tar_option_get("iteration"),
-  error = targets::tar_option_get("error"),
-  memory = targets::tar_option_get("memory"),
-  garbage_collection = targets::tar_option_get("garbage_collection"),
-  deployment = targets::tar_option_get("deployment"),
-  priority = targets::tar_option_get("priority"),
-  resources = targets::tar_option_get("resources"),
-  storage = targets::tar_option_get("storage"),
-  retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue"),
-  description = targets::tar_option_get("description")
-)
-
-tar_aws_fst_dt(
-  name,
-  command,
-  pattern = NULL,
-  tidy_eval = targets::tar_option_get("tidy_eval"),
-  packages = targets::tar_option_get("packages"),
-  library = targets::tar_option_get("library"),
-  repository = targets::tar_option_get("repository"),
-  iteration = targets::tar_option_get("iteration"),
-  error = targets::tar_option_get("error"),
-  memory = targets::tar_option_get("memory"),
-  garbage_collection = targets::tar_option_get("garbage_collection"),
-  deployment = targets::tar_option_get("deployment"),
-  priority = targets::tar_option_get("priority"),
-  resources = targets::tar_option_get("resources"),
-  storage = targets::tar_option_get("storage"),
-  retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue"),
-  description = targets::tar_option_get("description")
-)
-
-tar_aws_fst_tbl(
-  name,
-  command,
-  pattern = NULL,
-  tidy_eval = targets::tar_option_get("tidy_eval"),
-  packages = targets::tar_option_get("packages"),
-  library = targets::tar_option_get("library"),
-  repository = targets::tar_option_get("repository"),
-  iteration = targets::tar_option_get("iteration"),
-  error = targets::tar_option_get("error"),
-  memory = targets::tar_option_get("memory"),
-  garbage_collection = targets::tar_option_get("garbage_collection"),
-  deployment = targets::tar_option_get("deployment"),
-  priority = targets::tar_option_get("priority"),
-  resources = targets::tar_option_get("resources"),
-  storage = targets::tar_option_get("storage"),
-  retrieval = targets::tar_option_get("retrieval"),
-  cue = targets::tar_option_get("cue"),
-  description = targets::tar_option_get("description")
+  description = targets::tar_option_get("description"),
+  compression = "snappy",
+  class = "tbl"
 )
 }
 \arguments{
-\item{name}{Symbol, name of the target. A target
-name must be a valid name for a symbol in R, and it
+\item{name}{Symbol, name of the target.
+In \code{\link[targets:tar_target]{tar_target()}}, \code{name} is an unevaluated symbol, e.g.
+\code{tar_target(name = data)}.
+In \code{\link[targets:tar_target_raw]{tar_target_raw()}}, \code{name} is a character string, e.g.
+\code{tar_target_raw(name = "data")}.
+
+A target name must be a valid name for a symbol in R, and it
 must not start with a dot. Subsequent targets
 can refer to this name symbolically to induce a dependency relationship:
 e.g. \code{tar_target(downstream_target, f(upstream_target))} is a
@@ -505,10 +314,20 @@ You can recover the seed of a completed target
 with \code{tar_meta(your_target, seed)} and run \code{\link[targets:tar_seed_set]{tar_seed_set()}}
 on the result to locally recreate the target's initial RNG state.}
 
-\item{command}{R code to run the target.}
+\item{command}{R code to run the target.
+In \code{\link[targets:tar_target]{tar_target()}}, \code{command} is an unevaluated expression, e.g.
+\code{tar_target(command = data)}.
+In \code{\link[targets:tar_target_raw]{tar_target_raw()}}, \code{command} is an evaluated expression, e.g.
+\code{tar_target_raw(command = quote(data))}.}
 
-\item{pattern}{Language to define branching for a target.
-For example, in a pipeline with numeric vector targets \code{x} and \code{y},
+\item{pattern}{Code to define a dynamic branching branching for a target.
+In \code{\link[targets:tar_target]{tar_target()}}, \code{pattern} is an unevaluated expression, e.g.
+\code{tar_target(pattern = map(data))}.
+In \code{\link[targets:tar_target_raw]{tar_target_raw()}}, \code{command} is an evaluated expression, e.g.
+\code{tar_target_raw(pattern = quote(map(data)))}.
+
+To demonstrate dynamic branching patterns, suppose we have
+a pipeline with numeric vector targets \code{x} and \code{y}. Then,
 \code{tar_target(z, x + y, pattern = map(x, y))} implicitly defines
 branches of \code{z} that each compute \code{x[1] + y[1]}, \code{x[2] + y[2]},
 and so on. See the user manual for details.}
@@ -541,6 +360,8 @@ for details for instructions.
 See the cloud storage section of
 \url{https://books.ropensci.org/targets/data.html}
 for details for instructions.
+\item A character string from \code{tar_repository_cas()} for content-addressable
+storage.
 }
 
 Note: if \code{repository} is not \code{"local"} and \code{format} is \code{"file"}
@@ -573,13 +394,25 @@ stops and throws an error. Options:
 \itemize{
 \item \code{"stop"}: the whole pipeline stops and throws an error.
 \item \code{"continue"}: the whole pipeline keeps going.
-\item \code{"abridge"}: any currently running targets keep running,
-but no new targets launch after that.
-(Visit \url{https://books.ropensci.org/targets/debugging.html}
-to learn how to debug targets using saved workspaces.)
 \item \code{"null"}: The errored target continues and returns \code{NULL}.
 The data hash is deliberately wrong so the target is not
 up to date for the next run of the pipeline.
+\item \code{"abridge"}: any currently running targets keep running,
+but no new targets launch after that.
+\item \code{"trim"}: all currently running targets stay running. A queued
+target is allowed to start if:
+\enumerate{
+\item It is not downstream of the error, and
+\item It is not a sibling branch from the same \code{\link[targets:tar_target]{tar_target()}} call
+(if the error happened in a dynamic branch).
+}
+
+The idea is to avoid starting any new work that the immediate error
+impacts. \code{error = "trim"} is just like \code{error = "abridge"},
+but it allows potentially healthy regions of the dependency graph
+to begin running.
+(Visit \url{https://books.ropensci.org/targets/debugging.html}
+to learn how to debug targets using saved workspaces.)
 }}
 
 \item{memory}{Character of length 1, memory strategy.
@@ -678,13 +511,33 @@ functions like \code{\link[targets:tar_make]{tar_make()}}. For example,
 \code{tar_manifest(names = tar_described_as(starts_with("survival model")))}
 lists all the targets whose descriptions start with the character
 string \code{"survival model"}.}
+
+\item{compression}{Character string, compression type for saving the
+data. See the \code{compression} argument of \code{\link[nanoparquet:write_parquet]{nanoparquet::write_parquet()}}
+for details.}
+
+\item{class}{Character vector with the data frame subclasses to assign.
+See the \code{class} argument of \code{\link[nanoparquet:parquet_options]{nanoparquet::parquet_options()}} for details.}
 }
 \value{
 A \code{tar_target()} object with the eponymous storage format.
 See the "Target objects" section for background.
 }
 \description{
-Target archetypes for specialized storage formats.
+Target factories for targets with
+specialized storage formats. For example,
+\code{tar_qs(name = data, command = get_data())} is shorthand for
+\code{tar_target(name = data, command = get_data(), format = "qs")}.
+
+Most of the formats are shorthand for built-in formats in \code{targets}.
+The only exception currently is the \code{nanoparquet} format:
+\code{tar_nanoparquet(data, get_data())} is shorthand for
+\verb{tar_target(data get_data(), format = tar_format_nanoparquet())},
+where \code{\link[=tar_format_nanoparquet]{tar_format_nanoparquet()}} resides in \code{tarchetypes}.
+
+\code{\link[=tar_format_feather]{tar_format_feather()}} is superseded in favor of \code{\link[=tar_arrow_feather]{tar_arrow_feather()}},
+and all the \verb{tar_aws_*()} functions are superseded because of the
+introduction of the \code{aws} argument into \code{\link[targets:tar_target]{targets::tar_target()}}.
 }
 \details{
 These functions are shorthand for targets with specialized
@@ -715,13 +568,16 @@ details the structure and composition of target objects.
 \examples{
 if (identical(Sys.getenv("TAR_LONG_EXAMPLES"), "true")) {
 targets::tar_dir({ # tar_dir() runs code from a temporary directory.
-targets::tar_script(
+targets::tar_script({
+  library(targets)
+  library(tarchetypes)
   list(
-    tarchetypes::tar_rds(x, 1)
+    tar_rds(name = x, command = 1),
+    tar_nanoparquet(name = y, command = data.frame(x = x))
   )
-)
+})
 targets::tar_make()
 })
 }
 }
-\concept{Formats}
+\concept{target factories for storage formats}

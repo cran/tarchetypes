@@ -1,71 +1,5 @@
-#' @title Dynamic batched replication within static branches
-#'   for data frames (raw version).
+#' @rdname tar_map_rep
 #' @export
-#' @family branching
-#' @description Define targets for batched replication
-#'   within static branches for data frames (raw version).
-#' @description This function is like [tar_map_rep()]
-#'   except the `name` argument is a character string
-#'   and the `names` and `columns` arguments are
-#'   language objects.
-#' @return A list of new target objects.
-#'   See the "Target objects" section for background.
-#' @inheritSection tar_map Target objects
-#' @inheritSection tar_rep Replicate-specific seeds
-#' @inheritParams tar_rep
-#' @param command Language object, R code for a single replicate. Must return
-#'   a data frame.
-#' @param names Language object with a tidyselect expression
-#'   to select which columns of `values` to use to construct
-#'   statically branched target names. If `NULL`, then
-#'   short names are automatically generated.
-#' @param columns Language object with a tidyselect expression
-#'   to select which columns of `values` to append to the output.
-#'   Columns already in the target output are not appended.
-#' @param combine Logical of length 1, whether to statically combine
-#'   all the results into a single target downstream.
-#' @param format Character of length 1, storage format of the output.
-#'   An efficient data frame format like `"feather"` is recommended,
-#'   but the default is `"rds"` to avoid incurring extra package
-#'   dependencies. See the help file of `targets::tar_target()`
-#'   for details on storage formats.
-#' @inheritParams targets::tar_target
-#' @inheritParams tar_map
-#' @inheritParams tar_rep
-#' @examples
-#' if (identical(Sys.getenv("TAR_LONG_EXAMPLES"), "true")) {
-#' targets::tar_dir({ # tar_dir() runs code from a temporary directory.
-#' targets::tar_script({
-#'   # Just a sketch of a Bayesian sensitivity analysis of hyperparameters:
-#'   assess_hyperparameters <- function(sigma1, sigma2) {
-#'     # data <- simulate_random_data() # user-defined function
-#'     # run_model(data, sigma1, sigma2) # user-defined function
-#'     # Mock output from the model:
-#'     posterior_samples <- stats::rnorm(1000, 0, sigma1 + sigma2)
-#'     tibble::tibble(
-#'       posterior_median = median(posterior_samples),
-#'       posterior_quantile_0.025 = quantile(posterior_samples, 0.025),
-#'       posterior_quantile_0.975 = quantile(posterior_samples, 0.975)
-#'     )
-#'   }
-#'   hyperparameters <- tibble::tibble(
-#'     scenario = c("tight", "medium", "diffuse"),
-#'     sigma1 = c(10, 50, 50),
-#'     sigma2 = c(10, 5, 10)
-#'   )
-#'   tarchetypes::tar_map_rep_raw(
-#'     "sensitivity_analysis",
-#'     command = quote(assess_hyperparameters(sigma1, sigma2)),
-#'     values = hyperparameters,
-#'     names = quote(tidyselect::any_of("scenario")),
-#'     batches = 2,
-#'     reps = 3
-#'    )
-#' })
-#' targets::tar_make()
-#' targets::tar_read(sensitivity_analysis)
-#' })
-#' }
 tar_map_rep_raw <- function(
   name,
   command,
@@ -77,6 +11,7 @@ tar_map_rep_raw <- function(
   reps = 1,
   rep_workers = 1,
   combine = TRUE,
+  delimiter = "_",
   tidy_eval = targets::tar_option_get("tidy_eval"),
   packages = targets::tar_option_get("packages"),
   library = targets::tar_option_get("library"),
@@ -117,6 +52,8 @@ tar_map_rep_raw <- function(
   targets::tar_assert_scalar(combine)
   targets::tar_assert_lgl(combine)
   tar_assert_rep_workers(rep_workers)
+  targets::tar_assert_chr(delimiter)
+  targets::tar_assert_scalar(delimiter)
   rep_workers <- as.integer(rep_workers)
   envir <- targets::tar_option_get("envir")
   command <- tar_raw_command(name, command)
@@ -125,7 +62,7 @@ tar_map_rep_raw <- function(
     columns <- targets::tar_tidyselect_eval(columns, colnames(values))
     command <- tar_command_append_static_values(command, columns)
   }
-  name_batch <- paste0(name, "_batch")
+  name_batch <- paste0(name, delimiter, "batch")
   target_batch <- targets::tar_target_raw(
     name = name_batch,
     command = substitute(seq_len(batches), env = list(batches = batches)),
@@ -179,7 +116,8 @@ tar_map_rep_raw <- function(
         target_dynamic,
         values = values,
         names = names,
-        descriptions = descriptions
+        descriptions = descriptions,
+        delimiter = delimiter
       )
     )
   )

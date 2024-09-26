@@ -3,6 +3,10 @@
 #' @family hooks
 #' @description In the command of each target, wrap each mention of
 #'   each dependency target in an arbitrary R expression.
+#'
+#'   `tar_hook_inner()` expects unevaluated expressions for the `hook` and
+#'   `names` arguments, whereas `tar_hook_inner_raw()` expects
+#'   evaluated expression objects.
 #' @details The expression you supply to `hook`
 #'   must contain the special placeholder symbol `.x`
 #'   so `tar_hook_inner()` knows where to insert the original command
@@ -17,8 +21,10 @@
 #'   The hook must contain the special placeholder symbol `.x`
 #'   so `tar_hook_inner()` knows where to insert the code to wrap
 #'   mentions of dependencies.
-#'   The hook code is quoted (not evaluated) so there is no need
-#'   to wrap it in `quote()`, `expression()`, or similar.
+#'
+#'   `tar_hook_inner()` expects unevaluated expressions for the `hook` and
+#'   `names` arguments, whereas `tar_hook_inner_raw()` expects
+#'   evaluated expression objects.
 #' @param names_wrap Names of targets to wrap with the hook
 #'   where they appear as dependencies in the commands of other targets.
 #'   Use `tidyselect` helpers like [starts_with()], as in
@@ -43,6 +49,23 @@
 #'   )
 #' })
 #' targets::tar_manifest(fields = command)
+#' # With tar_hook_inner_raw():
+#' targets::tar_script({
+#'   targets <- list(
+#'     # Nested target lists work with hooks.
+#'     list(
+#'       targets::tar_target(x1, task1()),
+#'       targets::tar_target(x2, task2(x1))
+#'     ),
+#'     targets::tar_target(x3, task3(x2, x1)),
+#'     targets::tar_target(y1, task4(x3))
+#'   )
+#'   tarchetypes::tar_hook_inner_raw(
+#'     targets = targets,
+#'     hook = quote(fun(.x)),
+#'     names = quote(starts_with("x"))
+#'   )
+#' })
 #' })
 #' }
 tar_hook_inner <- function(
@@ -50,51 +73,16 @@ tar_hook_inner <- function(
   hook,
   names = NULL,
   names_wrap = NULL,
-  set_deps = TRUE
+  set_deps = TRUE,
+  envir = parent.frame()
 ) {
-  targets::tar_assert_scalar(set_deps)
-  targets::tar_assert_lgl(set_deps)
-  targets::tar_assert_nonmissing(set_deps)
-  targets <- tar_copy_targets(targets)
-  hook <- substitute(hook)
-  targets::tar_assert_lang(hook)
-  assert_hook_placeholder(hook)
-  names_quosure <- rlang::enquo(names)
-  names_wrap_quosure <- rlang::enquo(names_wrap)
-  env_wrap <- tar_hook_inner_env(
+  force(envir)
+  tar_hook_inner_raw(
     targets = targets,
-    hook = hook,
-    names_wrap_quosure = names_wrap_quosure
+    hook = substitute(hook),
+    names = substitute(names),
+    names_wrap = substitute(names_wrap),
+    set_deps = set_deps,
+    envir = envir
   )
-  walk_targets(
-    targets = targets,
-    names_quosure = names_quosure,
-    fun = tar_hook_inner_insert,
-    env_wrap = env_wrap,
-    set_deps = set_deps
-  )
-  targets
-}
-
-tar_hook_inner_env <- function(targets, hook, names_wrap_quosure) {
-  choices_wrap <- map_chr(
-    unlist(list(targets), recursive = TRUE),
-    ~.x$settings$name
-  )
-  names_wrap <- eval_tidyselect(names_wrap_quosure, choices_wrap) %|||%
-    choices_wrap
-  out <- map(names_wrap, ~tar_hook_inner_env_elt(name = .x, hook = hook))
-  names(out) <- names_wrap
-  out
-}
-
-tar_hook_inner_env_elt <- function(name, hook) {
-  tar_sub_lang(hook, values = list(.x = as.symbol(name)))
-}
-
-tar_hook_inner_insert <- function(target, env_wrap, set_deps) {
-  assert_hook_expr(target)
-  lang <- target$command$expr[[1]]
-  expr <- tar_sub_expr(lang, values = env_wrap)
-  tar_replace_command(target = target, expr = expr, set_deps = set_deps)
 }

@@ -1,58 +1,5 @@
-#' @title Batched replication with dynamic branching
-#'   (raw version).
+#' @rdname tar_rep
 #' @export
-#' @family branching
-#' @description Batching is important for optimizing the efficiency
-#'   of heavily dynamically-branched workflows:
-#'   <https://books.ropensci.org/targets/dynamic.html#batching>.
-#'   [tar_rep_raw()] is just like [tar_rep()] except the
-#'   name is a character string and the command is a
-#'   language object.
-#' @details `tar_rep_raw()` creates two targets:
-#'   an upstream local stem
-#'   with an integer vector of batch ids, and a downstream pattern
-#'   that maps over the batch ids. (Thus, each batch is a branch.)
-#'   Each batch/branch replicates the command a certain number of times.
-#'
-#'   Both batches and reps within each batch
-#'   are aggregated according to the method you specify
-#'   in the `iteration` argument. If `"list"`, reps and batches
-#'   are aggregated with `list()`. If `"vector"`,
-#'   then `vctrs::vec_c()`. If `"group"`, then `vctrs::vec_rbind()`.
-#' @inheritSection tar_rep Replicate-specific seeds
-#' @return A list of two target objects, one upstream and one downstream.
-#'   The upstream one does some work and returns some file paths,
-#'   and the downstream target is a pattern that applies `format = "file"`.
-#'   See the "Target objects" section for background.
-#' @inheritSection tar_map Target objects
-#' @inheritParams targets::tar_target_raw
-#' @inheritParams tar_rep
-#' @param command Expression object with code to run multiple times.
-#'   Must return a list or data frame when evaluated.
-#' @param batches Number of batches. This is also the number of dynamic
-#'   branches created during `tar_make()`.
-#' @param reps Number of replications in each batch. The total number
-#'   of replications is `batches * reps`.
-#' @param tidy_eval Whether to invoke tidy evaluation
-#'   (e.g. the `!!` operator from `rlang`) as soon as the target is defined
-#'   (before `tar_make()`). Applies to the `command` argument.
-#' @examples
-#' if (identical(Sys.getenv("TAR_LONG_EXAMPLES"), "true")) {
-#' targets::tar_dir({ # tar_dir() runs code from a temporary directory.
-#' targets::tar_script({
-#'   list(
-#'     tarchetypes::tar_rep_raw(
-#'       "x",
-#'       expression(data.frame(x = sample.int(1e4, 2))),
-#'       batches = 2,
-#'       reps = 3
-#'     )
-#'   )
-#' })
-#' targets::tar_make(callr_function = NULL)
-#' targets::tar_read(x)
-#' })
-#' }
 tar_rep_raw <- function(
   name,
   command,
@@ -233,7 +180,7 @@ tar_rep_pattern <- function(name_batch) {
   substitute(map(x), env = list(x = as.symbol(name_batch)))
 }
 
-#' @title Run a batch in a `tar_rep()` archetype.
+#' @title Run a `tar_rep()` batch.
 #' @description Internal function needed for `tar_rep()`.
 #'   Users should not invoke it directly.
 #' @export

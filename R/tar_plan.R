@@ -1,5 +1,6 @@
-#' @title A `drake`-plan-like pipeline archetype
+#' @title A `drake`-plan-like pipeline DSL
 #' @export
+#' @family Pipeline factories
 #' @description Simplify target specification in pipelines.
 #' @details Allows targets with just targets and commands
 #'   to be written in the pipeline as `target = command` instead of
@@ -8,14 +9,13 @@
 #'   `tar_plan(x = 1, y = 2, tar_target(z, 3), tar_render(r, "r.Rmd"))`
 #'   is equivalent to
 #'   `list(tar_target(x, 1), tar_target(y, 2), tar_target(z, 3), tar_render(r, "r.Rmd"))`. # nolint
-#' @family Pipeline factories
 #' @return A list of `tar_target()` objects.
 #'   See the "Target objects" section for background.
 #' @inheritSection tar_map Target objects
 #' @param ... Named and unnamed targets. All named targets must follow
 #'   the `drake`-plan-like `target = command` syntax, and all unnamed
 #'   arguments must be explicit calls to create target objects,
-#'   e.g. `tar_target()`, target archetypes like [tar_render()], or similar.
+#'   e.g. `tar_target()`, target factories like [tar_render()], or similar.
 #' @examples
 #' if (identical(Sys.getenv("TAR_LONG_EXAMPLES"), "true")) {
 #' targets::tar_dir({ # tar_dir() runs code from a temporary directory.

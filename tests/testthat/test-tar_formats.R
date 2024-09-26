@@ -34,9 +34,8 @@ targets::tar_test("tar_file()", {
 })
 
 targets::tar_test("tar_file_fast()", {
-  x <- tar_file_fast(x, 0)
+  x <- suppressWarnings(tar_file_fast(x, 0))
   expect_true(inherits(x, "tar_target"))
-  expect_equal(x$settings$format, "file_fast")
 })
 
 targets::tar_test("tar_rds()", {
@@ -53,6 +52,12 @@ targets::tar_test("tar_qs()", {
 
 targets::tar_test("tar_format_feather()", {
   x <- tar_format_feather(x, 0)
+  expect_true(inherits(x, "tar_target"))
+  expect_equal(x$settings$format, "feather")
+})
+
+targets::tar_test("tar_arrow_feather()", {
+  x <- tar_arrow_feather(x, 0)
   expect_true(inherits(x, "tar_target"))
   expect_equal(x$settings$format, "feather")
 })

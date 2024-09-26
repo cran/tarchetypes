@@ -17,7 +17,9 @@ backoff
 Badi
 Baltagi
 batchtools
+quosure
 Bengtsson
+unevaluated
 Bioinformatics
 Boneri
 Bostock
@@ -317,3 +319,5 @@ zeromq
 ZeroMQ
 jupyter
 Jupyter
+Nanoparquet
+
