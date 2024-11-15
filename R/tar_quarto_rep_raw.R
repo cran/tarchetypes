@@ -59,7 +59,10 @@ tar_quarto_rep_raw <- function(
   rep_workers <- as.integer(rep_workers)
   name_params <- paste0(name, "_params")
   sym_params <- as.symbol(name_params)
-  default_output_file <- utils::head(tar_quarto_files(path)$output, n = 1L)
+  default_output_file <- utils::head(
+    tar_quarto_files(path, quiet = quiet)$output,
+    n = 1L
+  )
   default_output_file <- default_output_file %||%
     fs::path_ext_set(path, "html")
   target_params <- targets::tar_target_raw(
@@ -347,9 +350,9 @@ tar_quarto_rep_run <- function(
     }
   )
   fun <- eval(call, envir = targets::tar_option_get("envir"))
-  pedigree <- targets::tar_definition()$pedigree
-  name <- pedigree$parent
-  batch <- pedigree$index
+  target <- targets::tar_definition()
+  name <- target$pedigree$parent %|||% target$settings$name
+  batch <- target$pedigree$index %|||% target$index
   reps <- length(execute_params)
   seeds <- produce_batch_seeds(name = name, batch = batch, reps = reps)
   if (rep_workers > 1L) {

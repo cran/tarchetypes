@@ -1,3 +1,11 @@
+# tarchetypes 0.11.0
+
+* Add an `output_file` argument to `tar_quarto()` and `tar_quarto_raw()` for single documents (#198, @mutlusun).
+* Detect child quarto documents (#199, @mutlusun).
+* Improve reporting of static branch names from `tar_map()` and `tar_map_rep()` (#201, @kkmann).
+* Ensure compatibility with `targets` after https://github.com/ropensci/targets/issues/1368.
+* Improve detection of Quarto files in `tar_quarto_inspect()` (#200, @multusun).
+
 # tarchetypes 0.10.0
 
 * Add a `delimiter` argument to `tar_map()` etc. for customizing separators in target names (#177, @psychelzh).
