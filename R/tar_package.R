@@ -6,10 +6,10 @@
 #'   pipelines in targets easier and cleaner to write and understand.
 #' @name tarchetypes-package
 #' @importFrom dplyr bind_rows mutate select
-#' @importFrom fs dir_create is_dir path_ext path_ext_remove
+#' @importFrom fs dir_create file_move is_dir path_ext path_ext_remove
 #'   path_ext_set path_rel
-#' @importFrom parallel clusterCall clusterMap makePSOCKcluster parLapply
-#'   stopCluster
+#' @importFrom parallel clusterCall clusterExport clusterMap makePSOCKcluster
+#'   parLapply stopCluster
 #' @importFrom rlang as_function as_quosure call2 check_installed enquo expr
 #'   inform is_call is_missing quo_squash
 #' @importFrom secretbase siphash13

@@ -1,3 +1,41 @@
+targets::tar_test("tar_map2() list vs unlist", {
+  out <- tar_map2(
+    x,
+    command1 = f1(arg1),
+    command2 = f2(arg1, arg2),
+    values = tibble::tibble(arg1 = letters[seq_len(2)]),
+    names = arg1,
+    suffix1 = "i",
+    suffix2 = "ii",
+    group = rep(LETTERS[seq_len(2)], each = nrow(!!.x) / 2),
+    unlist = TRUE
+  )
+  expect_equal(
+    sort(names(out)),
+    sort(
+      c(
+        "x_i_a", "x_i_b", "x_ii_a", "x_ii_b",
+        "x_ii_a_combine", "x_ii_b_combine", "x"
+      )
+    )
+  )
+  out <- tar_map2(
+    x,
+    command1 = f1(arg1),
+    command2 = f2(arg1, arg2),
+    values = tibble::tibble(arg1 = letters[seq_len(2)]),
+    names = arg1,
+    suffix1 = "i",
+    suffix2 = "ii",
+    group = rep(LETTERS[seq_len(2)], each = nrow(!!.x) / 2),
+    unlist = FALSE
+  )
+  expect_equal(
+    sort(names(out)),
+    sort(c("combine", "combine_dynamic", "static_branches"))
+  )
+})
+
 targets::tar_test("tar_map2(): combine, columns, static branches", {
   skip_if_not_installed("dplyr")
   targets::tar_script({
@@ -33,7 +71,13 @@ targets::tar_test("tar_map2(): combine, columns, static branches", {
   expect_equal(
     sort(out$name),
     sort(
-      paste0("x", c("_i_a", "_i_b", "_ii_a", "_ii_b", ""))
+      paste0(
+        "x",
+        c(
+          "_i_a", "_i_b", "_ii_a", "_ii_a_combine",
+          "_ii_b", "_ii_b_combine", ""
+        )
+      )
     )
   )
   expect_equal(
@@ -41,16 +85,12 @@ targets::tar_test("tar_map2(): combine, columns, static branches", {
     grepl("tar_map2_group", out$command)
   )
   expect_equal(
-    grepl("_ii_", out$name),
+    grepl("_ii_a$", out$name) | grepl("_ii_b$", out$name),
     grepl("tar_map2_run", out$command)
   )
   expect_equal(
-    grepl("^x$|^x_i_", out$name),
+    !(out$name %in% c("x_ii_a", "x_ii_b")),
     is.na(out$pattern)
-  )
-  expect_equal(
-    grepl("^x_ii", out$name),
-    !is.na(out$pattern)
   )
   expect_equal(
     out$name == "x",
@@ -67,8 +107,10 @@ targets::tar_test("tar_map2(): combine, columns, static branches", {
     "f2", "x_ii_b",
     "x_i_a", "x_ii_a",
     "x_i_b", "x_ii_b",
-    "x_ii_a", "x",
-    "x_ii_b", "x"
+    "x_ii_a", "x_ii_a_combine",
+    "x_ii_b", "x_ii_b_combine",
+    "x_ii_a_combine", "x",
+    "x_ii_b_combine", "x"
   )
   exp <- dplyr::arrange(exp, from, to)
   expect_equal(out, exp)
