@@ -92,6 +92,7 @@ tar_quarto_raw <- function(
   targets::tar_target_raw(
     name = name,
     command = command,
+    packages = "quarto", # for tar_renv()
     format = "file",
     repository = "local",
     error = error,
@@ -157,7 +158,7 @@ tar_quarto_command <- function(
       profile = profile
     )
   )
-  deps <- sort(unique(unlist(map(sources, ~knitr_deps(.x)))))
+  deps <- sort(unique(unlist(map(sources, ~ knitr_deps(.x)))))
   deps <- call_list(as_symbols(deps))
   fun <- call_ns("tarchetypes", "tar_quarto_run")
   expr <- list(

@@ -127,7 +127,13 @@ respectively for Rmd and Jupyter input files).}
 
 \item{debug}{Leave intermediate files in place after render.}
 
-\item{quiet}{Suppress warning and other messages.}
+\item{quiet}{Suppress warning and other messages, from R and also Quarto CLI
+(i.e \code{--quiet} is passed as command line).
+
+\code{quarto.quiet} \R option or \code{R_QUARTO_QUIET} environment variable can be used to globally override a function call
+(This can be useful to debug tool that calls \verb{quarto_*} functions directly).
+
+On Github Actions, it will always be \code{quiet = FALSE}.}
 
 \item{quarto_args}{Character vector of other \code{quarto} CLI arguments to append
 to the Quarto command executed by this function. This is mainly intended for
@@ -216,7 +222,8 @@ for non-dynamically-branched targets that other targets
 dynamically branch over. For example: if your pipeline has
 \code{tar_target(name = y, command = x, pattern = map(x))},
 then \code{tar_target(name = x, command = f(), memory = "auto")}
-will use persistent memory in order to avoid rereading all of \code{x}
+will use persistent memory for \code{x}
+in order to avoid rereading all of \code{x}
 for every branch of \code{y}.
 \item \code{"transient"}: the target gets unloaded
 after every new target completes.

@@ -72,10 +72,9 @@ argument, and
 a single file, or the path to the root of the project if rendering
 a whole Quarto project.}
 
-\item{output_file}{The name of the output file. If using \code{NULL}, the output
-filename will be based on the filename for the input file. \code{output_file} is
-mapped to the \code{--output} option flag of the \code{quarto} CLI. It is expected to
-be a filename only, not a path, relative or absolute.}
+\item{output_file}{Base name for single-file output (e.g. PDF, ePub, MS Word).
+This sets the \code{output-file} Quarto metadata. If \code{NULL}, the output filename
+will be based on the input filename.}
 
 \item{working_directory}{Optional character string,
 path to the working directory
@@ -113,7 +112,13 @@ respectively for Rmd and Jupyter input files).}
 
 \item{debug}{Leave intermediate files in place after render.}
 
-\item{quiet}{Suppress warning and other messages.}
+\item{quiet}{Suppress warning and other messages, from R and also Quarto CLI
+(i.e \code{--quiet} is passed as command line).
+
+\code{quarto.quiet} \R option or \code{R_QUARTO_QUIET} environment variable can be used to globally override a function call
+(This can be useful to debug tool that calls \verb{quarto_*} functions directly).
+
+On Github Actions, it will always be \code{quiet = FALSE}.}
 
 \item{quarto_args}{Character vector of other \code{quarto} CLI arguments to append
 to the Quarto command executed by this function. This is mainly intended for
@@ -175,7 +180,8 @@ for non-dynamically-branched targets that other targets
 dynamically branch over. For example: if your pipeline has
 \code{tar_target(name = y, command = x, pattern = map(x))},
 then \code{tar_target(name = x, command = f(), memory = "auto")}
-will use persistent memory in order to avoid rereading all of \code{x}
+will use persistent memory for \code{x}
+in order to avoid rereading all of \code{x}
 for every branch of \code{y}.
 \item \code{"transient"}: the target gets unloaded
 after every new target completes.
