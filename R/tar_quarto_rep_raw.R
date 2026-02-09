@@ -426,6 +426,14 @@ tar_quarto_rep_rep <- function(
   extension <- paste0(".", fs::path_ext(destination_basename))
   temporary_basename <- basename(tempfile(fileext = extension))
   temporary_file <- file.path(temporary_directory, temporary_basename)
+  # https://github.com/quarto-dev/quarto-cli/issues/6116
+  temporary_source <- file.path(
+    dirname(args$input),
+    basename(tempfile(fileext = paste0(".", fs::path_ext(args$input))))
+  )
+  file.copy(args$input, temporary_source)
+  on.exit(unlink(temporary_source))
+  args$input <- temporary_source
   args$output_file <- temporary_basename
   args$execute_params <- execute_params
   args$execute_params[["output_file"]] <- NULL
@@ -433,7 +441,14 @@ tar_quarto_rep_rep <- function(
   seed <- as.integer(if_any(anyNA(seeds), NA_integer_, seeds[rep]))
   if_any(anyNA(seed), NULL, targets::tar_seed_set(seed = seed))
   result <- do.call(quarto::quarto_render, args)
-  fs::file_move(temporary_basename, destination_file)
+  # Not the best policy, but it's hard to align Quarto's working directory
+  # policy with that of {targets}.
+  temporary_file <- if_any(
+    file.exists(temporary_file),
+    temporary_file,
+    temporary_basename
+  )
+  fs::file_move(temporary_file, destination_file)
   sort(as.character(fs::path_rel(unlist(destination_file))))
 }
 

@@ -1,3 +1,9 @@
+# tarchetypes 0.14.0
+
+* Try different paths to look for output files in `tar_quarto_rep()` (#217). Hard to tell if Quarto uses the current working directory or the directory of the source file as the destination for the output, and their policy may have changed in a different version of Quarto.
+* Add `tar_tangle()` (#226).
+* Avoid Quarto parallel rendering bug with a workaround in `tar_quarto_rep()` (#230, @ant-durrant).
+
 # tarchetypes 0.13.2
 
 * Disable `targets` internal processing progress bars in `tar_render()` and `tar_render_rep()`.
@@ -217,13 +223,13 @@
 # tarchetypes 0.0.2
 
 * Make sure every function with a help file in `man/` has Rd-tags `\value` and `\arguments`.
-* For every function with a help file in `man/`, describe the return value in the `\value` Rd tag. For each function that returns a target object or list of target objects, the `\value` tag now links to <https://books.ropensci.org/targets/>, the user manual where the purpose of target objects is explained, and <https://books.ropensci.org/targets-design/>, the design specification which documents the structure and composition of target objects.
+* For every function with a help file in `man/`, describe the return value in the `\value` Rd tag. For each function that returns a target definition object or list of target definition objects, the `\value` tag now links to <https://books.ropensci.org/targets/>, the user manual where the purpose of target definition objects is explained, and <https://books.ropensci.org/targets-design/>, the design specification which documents the structure and composition of target definition objects.
 * Ensure that examples, vignettes, and test do not write to the home file space of the user.
 * Ensure that no function defined in the `tarchetypes` package writes by default to the home file space of the user. The paths of all output files are controlled by non-`tarchetypes` functions that invoke `tarchetypes`.
 
 # tarchetypes 0.0.1
 
-* `tar_plan()` now returns a list of target objects rather than a pipeline object. Related: <https://github.com/ropensci/targets/issues/253>.
+* `tar_plan()` now returns a list of target definition objects rather than a pipeline object. Related: <https://github.com/ropensci/targets/issues/253>.
 
 # tarchetypes 0.0.0.9000
 
