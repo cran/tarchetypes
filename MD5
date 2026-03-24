@@ -1,7 +1,7 @@
-cc51aeaf91697c73fb31eb52dae478c1 *DESCRIPTION
+da728f0b22d5d553cefb2a80b21391b3 *DESCRIPTION
 fe2d2df764c64759ba16b27d74c536bc *LICENSE
 5b8f0c8f2daa4b52581d65b7e1a7a268 *NAMESPACE
-c77ca7af8478cdb06a8eaf2d8f9aa5c2 *NEWS.md
+134411a78d70f5a42190466ad1ace62c *NEWS.md
 72b93a8d242b04ca253f8ed9f4823c5a *R/class_counter.R
 2789072b5fde1f3d0ba273bad16524fd *R/class_step.R
 e321b637998fd6ed9546bf42dfae2544 *R/tar_age.R
@@ -50,7 +50,7 @@ a1efee412b359a8f1c89933703bd11e1 *R/tar_map_rep.R
 aebe782fcec411db810119261ab7afd0 *R/tar_package.R
 77c6f7b995a10508e10985d852084561 *R/tar_plan.R
 c648cdd99d46c9dce30e739167235bd4 *R/tar_quarto.R
-31efcb93214d7203324a2709650318ac *R/tar_quarto_files.R
+71f42845862efe1df52bc9b863e730c4 *R/tar_quarto_files.R
 fba275fa068c8f70f0ab78f48600dd4c *R/tar_quarto_raw.R
 3d9eda06f114afa22e93c336aee3c3aa *R/tar_quarto_rep.R
 a0537537b3d9116a04aacd613bd93299 *R/tar_quarto_rep_raw.R
@@ -142,7 +142,6 @@ abd4a328f8f5e40917101fc6247744c1 *man/tar_nanoparquet_write.Rd
 d0d4380c7c0dd7857c23bedafc627e4b *man/tar_plan.Rd
 99d566cb27ef8d63e832c4e91541e0b7 *man/tar_quarto.Rd
 1ca699f139612ae0ff540835a39feb94 *man/tar_quarto_files.Rd
-4bcd58652a8a9f631b5c6345b7f3886c *man/tar_quarto_files_get_source_files.Rd
 c2c0af8ecc5bbbbd190649e0b235eda6 *man/tar_quarto_rep.Rd
 1127bc090f5e53d01a56b38e8aa7ce0e *man/tar_quarto_rep_rep.Rd
 e983573d9173d11d217b0b09f62931fc *man/tar_quarto_rep_run.Rd
@@ -173,7 +172,7 @@ c1f19eabb2e24c71e437bc8ba8d8389f *man/tar_tangle.Rd
 ab002306d39ed254aa6e866a1b1879d1 *man/walk_call_knitr.Rd
 9b7ebb0ac8a1d0b8424453510a1e08f8 *tests/interactive/test-tar_download.R
 f9a909ad40d254d04cc97fe2ea5c71fc *tests/testthat.R
-4d4aa373e7b293f5d7ddd5e04280ca39 *tests/testthat/helper-utils.R
+65f8f7c77406fc4226e71105c79809e6 *tests/testthat/helper-utils.R
 b294aa957a1fbccac11d9f83636ec28a *tests/testthat/test-class_counter.R
 54935fc130c5ae43306113ec73755503 *tests/testthat/test-class_step.R
 b9b0130d8c6880bb02fa68779a8bb4da *tests/testthat/test-tar_age.R

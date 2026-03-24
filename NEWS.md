@@ -1,3 +1,7 @@
+# tarchetypes 0.14.1
+
+* Stay compatible with Quarto CLI >= 1.9.0. At some point between version 1.6.0 and 1.9.36, `quarto inspect` started returning relative paths instead of absolute paths under `fileInformation$includeMap`. This changed the output of `quarto::quarto_inspect()` in a way that broke `tarchetypes::tar_quarto_file()`. This version of `tarchetypes` fixes that issue for newer versions of Quarto while trying to stay compatible with older versions. The cutoff for `tarchetypes` is 1.9.0.
+
 # tarchetypes 0.14.0
 
 * Try different paths to look for output files in `tar_quarto_rep()` (#217). Hard to tell if Quarto uses the current working directory or the directory of the source file as the destination for the output, and their policy may have changed in a different version of Quarto.
