@@ -1,7 +1,7 @@
-da728f0b22d5d553cefb2a80b21391b3 *DESCRIPTION
+c946d7d54a749a78c362c04a049d3b77 *DESCRIPTION
 fe2d2df764c64759ba16b27d74c536bc *LICENSE
 5b8f0c8f2daa4b52581d65b7e1a7a268 *NAMESPACE
-134411a78d70f5a42190466ad1ace62c *NEWS.md
+c6736f2eb1b848189225b5fab836935f *NEWS.md
 72b93a8d242b04ca253f8ed9f4823c5a *R/class_counter.R
 2789072b5fde1f3d0ba273bad16524fd *R/class_step.R
 e321b637998fd6ed9546bf42dfae2544 *R/tar_age.R
@@ -34,7 +34,7 @@ d72f61a2d411ae536279a00e558a5c30 *R/tar_hook_before_raw.R
 46ee8af0bde15b774b4ca5f5c1b93b7d *R/tar_hook_inner_raw.R
 d2d6b92976e77174628ba2f76ae1ce62 *R/tar_hook_outer.R
 f69170a58680801589b8b74853d1b903 *R/tar_hook_outer_raw.R
-e26c25d49144666b33c17f66a037ef30 *R/tar_knit.R
+effe77ffc087e4d0ae01b1e1009eb22e *R/tar_knit.R
 5e247f776386e6596e23c2e3aa09a8c0 *R/tar_knit_raw.R
 320fe5ea181b9dfb11a9f5418b2a9784 *R/tar_knitr_deps.R
 d9a81733abb72e9809f0a50afcb51661 *R/tar_knitr_deps_expr.R
@@ -51,13 +51,13 @@ aebe782fcec411db810119261ab7afd0 *R/tar_package.R
 77c6f7b995a10508e10985d852084561 *R/tar_plan.R
 c648cdd99d46c9dce30e739167235bd4 *R/tar_quarto.R
 71f42845862efe1df52bc9b863e730c4 *R/tar_quarto_files.R
-fba275fa068c8f70f0ab78f48600dd4c *R/tar_quarto_raw.R
+6aeb60cec93dbab23acf65c88ae0eaa8 *R/tar_quarto_raw.R
 3d9eda06f114afa22e93c336aee3c3aa *R/tar_quarto_rep.R
-a0537537b3d9116a04aacd613bd93299 *R/tar_quarto_rep_raw.R
+4f4ae2264a11c38931f997bf561eea31 *R/tar_quarto_rep_raw.R
 ad0027dc5f7ba93a4186a2c465ce26d4 *R/tar_render.R
-b62b52fe04490d8ad9e0230e097d2861 *R/tar_render_raw.R
+068647d360d77a3790393790b56ab109 *R/tar_render_raw.R
 c05569bc0e7b62922d62404158ae6c28 *R/tar_render_rep.R
-5574b08f3ded325f6edad85e6a3b7de5 *R/tar_render_rep_raw.R
+e9de072bf5f700ac42bc2e6fc0cca5c8 *R/tar_render_rep_raw.R
 35f71c92177c78f684210ff501ee97b5 *R/tar_rep.R
 840ce0e78dab2d0d98fcbe1ffa1ed4f6 *R/tar_rep2.R
 c33ff99a414e37b8401ec00206ae71a3 *R/tar_rep2_raw.R
@@ -81,7 +81,7 @@ f98f544cd1dc2b2ffd428fde73383fe4 *R/utils_batch.R
 5fdf082c4c21e01f342ab7d344d07fe9 *R/utils_language.R
 c7ab208ad1768d6e5232cd7351e68c54 *R/utils_logic.R
 f2fcc2fa13d5fb8a221edbb6e39ef1e0 *R/utils_parallel.R
-b0b5670fd0dea5ac2f6dfd0e206daad4 *R/utils_targets.R
+f54373b51a9fc4f2d24297900e50f315 *R/utils_targets.R
 97de6dd7fd67098e033e41d4937d3cf2 *R/utils_tidyselect.R
 7a1c0669e50cc86915ef898233c24114 *inst/CITATION
 942f32571cea437e4d8078bb65dcba41 *inst/WORDLIST
@@ -175,8 +175,9 @@ f9a909ad40d254d04cc97fe2ea5c71fc *tests/testthat.R
 65f8f7c77406fc4226e71105c79809e6 *tests/testthat/helper-utils.R
 b294aa957a1fbccac11d9f83636ec28a *tests/testthat/test-class_counter.R
 54935fc130c5ae43306113ec73755503 *tests/testthat/test-class_step.R
+43b58c1f5e03ccf39f177a97a8780a9a *tests/testthat/test-envvar_inheritance.R
 b9b0130d8c6880bb02fa68779a8bb4da *tests/testthat/test-tar_age.R
-f6675de9c75c661d21077f8ab3dad81e *tests/testthat/test-tar_assign.R
+0a367e8d6359d4daf216a3eae465b5b9 *tests/testthat/test-tar_assign.R
 623263443906241dedf763de6376a997 *tests/testthat/test-tar_change.R
 d57ac0fe6318a463847d362568519c4c *tests/testthat/test-tar_combine.R
 63f96629d27343118d6a9c05593413d2 *tests/testthat/test-tar_cue_age.R
@@ -228,3 +229,4 @@ e6acd60b5da3f1d892dad462c3c9549d *tests/testthat/test-utils_assert.R
 f9b8b94a23b0e24d1ffc019560693f4b *tests/testthat/test-utils_functional.R
 b86d37241a82ad46b346a22b437bc27f *tests/testthat/test-utils_knitr.R
 c107941c93dd6d96e98b67ba55ceeaff *tests/testthat/test-utils_logic.R
+c306af768e1d08528203858cb112d90a *tests/testthat/test-utils_targets.R
